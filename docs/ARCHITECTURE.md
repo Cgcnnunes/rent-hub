@@ -29,7 +29,7 @@ The Node.js and Cloudflare Worker entry points must call the same application be
 | Web client | Next.js and strict TypeScript; responsive web, not native apps |
 | API transport | TypeScript using standard Web `Request`/`Response` APIs; no HTTP framework |
 | Backend runtime | Node.js locally and Cloudflare Workers initially, with runtime-specific entry points |
-| Monorepo | pnpm workspaces with Nx for project graph, affected tasks, and task caching |
+| Monorepo | npm workspaces with Nx for project graph, affected tasks, and task caching |
 | Initial hosting | Cloudflare, subject to runtime and plan compatibility checks |
 | Relational database | Cloudflare D1 initially; SQLite-compatible local development |
 | File storage | Cloudflare R2 initially; private by default |
