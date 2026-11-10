@@ -34,7 +34,7 @@ This log records choices gathered for the initial project baseline. Revisit deci
 | Nx cache | Use affected tasks and local task caching | Decide whether/when to enable remote caching |
 | Token details | Custom auth with JWT or equivalent signed tokens | Specify claims, expiry, refresh, revocation, cookie/transport behavior, and CSRF protections during auth design |
 | Email provider | Provider-independent delivery | Select a provider and confirm free-tier limits before implementation |
-| GitHub repo | Public `Cgcnnunes/rent-hub` created; `main` pushed and `Protect main` ruleset active | Add the PR validation workflow, then require its status check before application work begins |
+| GitHub repo | Public `Cgcnnunes/rent-hub` created; `main` pushed and `Protect main` ruleset active | Require the PR validation check after it has run; expand it to Nx quality tasks when app packages exist |
 | Commit sequence | Format is `type(rent-xxxxx): description`; commit sequence is distinct from feature branch sequence | Define collision-safe allocation before enforcing in hooks/CI |
 | Deployment queue | TEST deployments must queue; GitHub concurrency alone is not FIFO | Implement and test a durable serialization mechanism |
 | Production history | Successful deployments must be tracked durably | Select GitHub deployment records or equivalent metadata |

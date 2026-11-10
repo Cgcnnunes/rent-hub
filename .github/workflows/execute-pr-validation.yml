@@ -1,0 +1,53 @@
+name: PR validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+      - ready_for_review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: PR validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require exactly one release type
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          selected=$(printf '%s\n' "$PR_BODY" | grep -Eic '^[[:space:]]*-[[:space:]]+\[[xX]\][[:space:]]+(Major|Minor|Patch)[[:space:]]*$' || true)
+          if [ "$selected" -ne 1 ]; then
+            echo "::error::Select exactly one release type: Major, Minor, or Patch."
+            exit 1
+          fi
+
+      - name: Check patch whitespace
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: git diff --check "$BASE_SHA...$HEAD_SHA"
+
+      - name: Report current validation scope
+        run: echo "::notice::This documentation-only baseline has no application packages yet. Nx lint, format, type, test, and build tasks must be added with the workspace foundation."

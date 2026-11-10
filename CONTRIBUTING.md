@@ -24,7 +24,7 @@ The active `Protect main` ruleset currently:
 - Block force pushes.
 - Allow the repository owner/admin to bypass these rules.
 
-The PR validation workflow does not exist yet, so its status check cannot be required at this stage. Add the workflow and then require its passing check in this ruleset before application work begins.
+The `execute-pr-validation.yml` workflow currently checks the PR release selection and patch whitespace. Its check must be added to this ruleset after the workflow has run. Expand the workflow to run Nx lint, format, type, test, and build tasks when the application workspace is added.
 
 ## Checks
 
