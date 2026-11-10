@@ -1,6 +1,6 @@
 # Testing Strategy
 
-Testing is part of the architecture and must accompany each feature. Exact commands and CI task names will be added when the pnpm/Nx workspace is implemented.
+Testing is part of the architecture and must accompany each feature. Exact commands and CI task names will be added when the npm/Nx workspace is implemented.
 
 ## Test levels
 

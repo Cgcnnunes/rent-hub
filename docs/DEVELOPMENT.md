@@ -8,7 +8,7 @@ The repository currently contains documentation and Git initialization only. App
 
 The first implementation phase should add:
 
-- pnpm workspace configuration and strict TypeScript.
+- npm workspace configuration and strict TypeScript.
 - Nx project/task configuration for affected checks, builds, and deployments.
 - ESLint and Prettier configuration.
 - Vitest and Playwright configuration appropriate to the applications.

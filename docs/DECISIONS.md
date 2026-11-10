@@ -18,7 +18,7 @@ This log records choices gathered for the initial project baseline. Revisit deci
 | First-release scope | All listed business modules | User requested all listed modules in the first usable release |
 | Payments | Manual recording first; integrations later | Defer financial-provider integration complexity |
 | Backend | Native Web APIs with no framework; Hono excluded | Keep HTTP delivery portable and business logic independent |
-| Monorepo | pnpm and Nx | Affected checks/deployments and caching for independently deployable apps |
+| Monorepo | npm workspaces and Nx | npm is the selected package manager; Nx supports affected checks/deployments and caching for independently deployable apps |
 | Hosting | Cloudflare Free initially; prefer EU storage where available | Keep initial operating costs within the free tier |
 | Data processing location | No EU-only processing promise | Cloudflare Free is preferred; strict regional processing is not a launch guarantee |
 | Repository | Public, no license, default branch `main` | Public viewing without granting an open-source reuse license |

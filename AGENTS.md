@@ -15,7 +15,7 @@ This repository is currently a planning baseline. Do not describe planned behavi
 - The API uses TypeScript and standard Web `Request`/`Response` APIs; do not add Hono or another server framework.
 - Keep business rules independent of HTTP, Node.js, Cloudflare, database, and storage implementations.
 - Isolate Node.js and Cloudflare Worker entry points and provider-specific code behind adapters.
-- Nx is the selected monorepo task orchestrator; pnpm is the package manager.
+- Nx is the selected monorepo task orchestrator; npm is the package manager.
 - Check Cloudflare runtime compatibility feature by feature. Passing on local Node.js is not proof that code works on Workers.
 
 ## Quality and safety
