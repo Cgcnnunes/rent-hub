@@ -4,6 +4,8 @@
 
 No application deployment workflows or Cloudflare resources have been created yet. This document defines the intended behavior; it is not evidence that deployments are available.
 
+The GitHub `main` ruleset currently requires a pull request and one approval, blocks direct pushes, deletions, and force pushes, and allows repository admins to bypass. A required PR-validation status check is pending because the workflow has not yet been created.
+
 ## Environments
 
 | Environment | Purpose | Isolation |

@@ -17,14 +17,14 @@ The commit identifier sequence is separate from feature-branch numbering. Its co
 
 ## `main` branch policy
 
-The intended GitHub protection settings are:
+The active `Protect main` ruleset currently:
 
 - Require pull requests; block direct pushes and branch deletion.
 - Require one approving review.
-- Require PR validation to pass.
+- Block force pushes.
 - Allow the repository owner/admin to bypass these rules.
 
-The GitHub repository and its protection rules still need to be created and configured.
+The PR validation workflow does not exist yet, so its status check cannot be required at this stage. Add the workflow and then require its passing check in this ruleset before application work begins.
 
 ## Checks
 

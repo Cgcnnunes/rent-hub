@@ -33,7 +33,7 @@ Rent Hub is a property-management web application for landlords, initially focus
 
 ## Repository status
 
-The repository is initialized on `main`. The product brief calls for a pnpm/Nx monorepo containing a Next.js web app, a portable TypeScript API, and reusable packages. Those application packages and their commands will be added in the repository-foundation phase.
+The [public GitHub repository](https://github.com/Cgcnnunes/rent-hub) is initialized on `main`. The product brief calls for a pnpm/Nx monorepo containing a Next.js web app, a portable TypeScript API, and reusable packages. Those application packages and their commands will be added in the repository-foundation phase.
 
 ## Source use
 

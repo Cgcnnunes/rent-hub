@@ -22,7 +22,7 @@ This log records choices gathered for the initial project baseline. Revisit deci
 | Hosting | Cloudflare Free initially; prefer EU storage where available | Keep initial operating costs within the free tier |
 | Data processing location | No EU-only processing promise | Cloudflare Free is preferred; strict regional processing is not a launch guarantee |
 | Repository | Public, no license, default branch `main` | Public viewing without granting an open-source reuse license |
-| Main protection | Pull requests, one approval, passing PR validation, no direct pushes or branch deletion; owner/admin may bypass | Protect the default branch while retaining the requested admin bypass |
+| Main protection | Active ruleset requires pull requests and one approval, blocks direct pushes, deletions, and force pushes; repository admins may bypass | Protect the default branch while retaining the requested admin bypass |
 | UI proposals | Show four variants for selection | Explicit user preference |
 
 ## Pending validation or implementation choice
@@ -34,7 +34,7 @@ This log records choices gathered for the initial project baseline. Revisit deci
 | Nx cache | Use affected tasks and local task caching | Decide whether/when to enable remote caching |
 | Token details | Custom auth with JWT or equivalent signed tokens | Specify claims, expiry, refresh, revocation, cookie/transport behavior, and CSRF protections during auth design |
 | Email provider | Provider-independent delivery | Select a provider and confirm free-tier limits before implementation |
-| GitHub repo | Local repository exists; remote repository and branch rules not yet created | Create `Cgcnnunes/rent-hub` and configure protection when repository-creation access is available |
+| GitHub repo | Public `Cgcnnunes/rent-hub` created; `main` pushed and `Protect main` ruleset active | Add the PR validation workflow, then require its status check before application work begins |
 | Commit sequence | Format is `type(rent-xxxxx): description`; commit sequence is distinct from feature branch sequence | Define collision-safe allocation before enforcing in hooks/CI |
 | Deployment queue | TEST deployments must queue; GitHub concurrency alone is not FIFO | Implement and test a durable serialization mechanism |
 | Production history | Successful deployments must be tracked durably | Select GitHub deployment records or equivalent metadata |
