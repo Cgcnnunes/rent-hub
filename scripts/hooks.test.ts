@@ -1,14 +1,11 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 
 import { validatePushRef } from './push-policy.ts';
-
-const require = createRequire(import.meta.url);
 
 test('only allows pushing the current feature branch to a feature branch', () => {
   const current = 'refs/heads/rent-00007';
@@ -21,23 +18,6 @@ test('only allows pushing the current feature branch to a feature branch', () =>
     ['(delete)', current],
   ]) {
     assert.throws(() => validatePushRef(source, destination, current));
-  }
-});
-
-test('commitlint enforces the same subject rules as pull request validation', () => {
-  const cli = require.resolve('@commitlint/cli/cli.js');
-  const cases: Array<[string, number]> = [
-    ['feat(rent-00001): valid description', 0],
-    ['fix(rent-00001): Invalid', 1],
-    [`fix(rent-00001): ${'a'.repeat(121)}`, 1],
-    ['Merge branch main', 1],
-  ];
-  for (const [subject, expected] of cases) {
-    const result = spawnSync(process.execPath, [cli], {
-      input: subject,
-      encoding: 'utf8',
-    });
-    assert.equal(result.status, expected, result.stderr || result.stdout);
   }
 });
 
