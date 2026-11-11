@@ -67,6 +67,9 @@ Allowed commit types are `feat`, `chore`, `refactor`, `fix`, and `doc`. The lowe
 
 ## Git hooks
 
+For a beginner-friendly explanation of each hook, command, and supporting
+script, see the [Git hooks guide](HOOKS.md).
+
 - **Pre-commit:** `git diff --cached --check` rejects whitespace errors and conflict markers; `node scripts/check-staged.ts` checks formatting for staged files and rejects partially staged files; `npm run lint` lints the workspace. Partially staged files must have their remaining changes staged or set aside first, so checks cannot validate a different version from the commit.
 - **Commit-msg:** Commitlint enforces the format, allowed type, lowercase description, and description length without allocating identifiers; PR validation uses the same Commitlint configuration.
 - **Pre-push:** `node scripts/push-policy.ts` validates the branch refs; `git merge-base` selects the local `origin/main` base. `tsc` type-checks the scripts and `node --test` tests their policies; `nx affected` runs unit tests and type checks for affected projects, and `npm run build` builds the workspace. Generated build files remain ignored by Git. Fetch `origin/main` before pushing; browser tests run in PR validation rather than this hook.

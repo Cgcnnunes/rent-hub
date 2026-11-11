@@ -23,6 +23,7 @@ Rent Hub is a property-management web application for landlords, initially focus
 - [Database model](docs/DATABASE.md)
 - [API contracts](docs/API.md)
 - [Development workflow](docs/DEVELOPMENT.md)
+- [Git hooks guide](docs/HOOKS.md)
 - [Testing strategy](docs/TESTING.md)
 - [Deployment and environments](docs/DEPLOYMENT.md)
 - [Security and data handling](docs/SECURITY.md)
