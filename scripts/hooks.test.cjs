@@ -37,14 +37,11 @@ test('commitlint enforces the same subject rules as pull request validation', ()
 });
 
 test('pre-push rejects an actual ref update to main', () => {
-  const ref = execFileSync('git', ['symbolic-ref', 'HEAD'], {
-    encoding: 'utf8',
-  }).trim();
   const sha = execFileSync('git', ['rev-parse', 'HEAD'], {
     encoding: 'utf8',
   }).trim();
   const result = spawnSync(process.execPath, ['scripts/pre-push.cjs'], {
-    input: `${ref} ${sha} refs/heads/main ${sha}\n`,
+    input: `refs/heads/rent-00007 ${sha} refs/heads/main ${sha}\n`,
     encoding: 'utf8',
   });
   assert.notEqual(result.status, 0);
