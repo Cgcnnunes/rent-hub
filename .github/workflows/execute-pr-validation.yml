@@ -77,4 +77,10 @@ jobs:
         env:
           NX_BASE: ${{ github.event.pull_request.base.sha }}
           NX_HEAD: ${{ github.event.pull_request.head.sha }}
-        run: npx nx affected -t lint typecheck test build test-e2e --output-style=static
+        run: npx nx affected -t lint typecheck test build --output-style=static
+
+      - name: Run affected browser tests
+        env:
+          NX_BASE: ${{ github.event.pull_request.base.sha }}
+          NX_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: npx nx affected -t test-e2e --output-style=static

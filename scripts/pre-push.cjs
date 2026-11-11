@@ -27,6 +27,12 @@ for (const ref of refs) {
         'typecheck',
         'test',
         'build',
+        `--base=${base}`,
+        `--head=${localSha}`,
+      ]);
+      runNode(nx, [
+        'affected',
+        '-t',
         'test-e2e',
         `--base=${base}`,
         `--head=${localSha}`,
