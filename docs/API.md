@@ -61,7 +61,7 @@ Use the HTTP status that best describes the failure and keep error codes stable.
 | `401` | Missing, invalid, expired, or revoked authentication |
 | `403` | Authenticated user lacks the required area permission or owner authority |
 | `404` | Resource does not exist or is not visible in the selected account |
-| `409` | Conflict with current state or a business invariant, including overlapping active contracts |
+| `409` | Conflict with current state or a business invariant, including conflicting signed contracts |
 | `413` | Request or uploaded file exceeds the configured limit |
 | `415` | Unsupported content type |
 | `422` | Well-formed input that fails field or business validation |
@@ -115,7 +115,7 @@ All paths below are relative to `/api/v1`. Unless an operation is explicitly pub
 | `PATCH /accounts/{accountId}/members/{userId}` | Change a member's per-area access | Owner |
 | `DELETE /accounts/{accountId}/members/{userId}` | Remove a member from the account | Owner |
 
-Registration creates an account owned by the registering user. An unverified user cannot use business endpoints. Invitation acceptance never bypasses registration, verification, or login requirements. Invitation expiry, duplicate invitations, ownership transfer, and last-owner behavior must be defined before implementation.
+Registration creates an account owned by the registering user. An unverified user cannot use business endpoints. Invitations default to Viewer for every business area, adjustable by the owner; member administration remains owner-only and document access retains associated-record checks. Invitation acceptance never bypasses registration, verification, or login requirements. Invitation expiry, duplicate invitations, ownership transfer, and last-owner behavior must be defined before implementation.
 
 ### Dashboard and portfolio
 
@@ -123,7 +123,7 @@ Registration creates an account owned by the registering user. An unverified use
 |---|---|---|
 | `GET /accounts/{accountId}/dashboard` | Return property and active-contract summaries, upcoming and overdue payments, recent activity, maintenance, and important dates | Viewer for each included area |
 
-The dashboard response must be permission-aware: omit data from areas the member cannot access and do not infer or reveal their records through aggregate counts. Define the exact aggregation windows and behavior when the user has access to only some areas with the dashboard feature.
+The dashboard response must be permission-aware: omit data from areas the member cannot access and do not infer or reveal their records through aggregate counts. Upcoming rent uses the 90-day signed-commitment prediction described in [Product Requirements](PRODUCT.md#dashboard-prediction), clearly distinguishing estimates from recorded payments without creating entries. Exclude recoverably deleted and suppressed rent periods and warn that the forecast may be incomplete without revealing inaccessible records. Define other aggregation windows and behavior when the user has access to only some areas with the dashboard feature.
 
 ### Properties and tenants
 
@@ -140,7 +140,9 @@ The dashboard response must be permission-aware: omit data from areas the member
 | `PATCH /accounts/{accountId}/tenants/{tenantId}` | Update tenant details | Tenants |
 | `DELETE /accounts/{accountId}/tenants/{tenantId}` | Soft-delete tenant information | Tenants |
 
-Property payloads should cover the property details and address needed by the product. Tenant payloads should contain only the personal information needed to manage a tenancy. Exact fields, address structure, validation, and handling of tenant records referenced by historical contracts are to be specified with those features.
+Property and tenant payloads must follow the required and optional fields in [Product Requirements](PRODUCT.md#rental-spaces-and-contracts). Support landlord-named rooms belonging to a property and using its address; room routes and schemas remain to be designed. Tenant records represent contract signers, not other household occupants, and can be reused across properties within the same account. Define the existing-tenant association route and its authorization, exact schemas, and detailed validation with those features.
+
+Implement the property, room, and signer archive/delete restrictions in [Product Requirements](PRODUCT.md#archiving-and-retained-history). Design archive/restore operations, archived-list filtering, and associated permissions before implementation; do not treat archive as a 30-day soft delete.
 
 ### Contracts
 
@@ -154,7 +156,7 @@ Property payloads should cover the property details and address needed by the pr
 | `PUT /accounts/{accountId}/contracts/{contractId}/tenants/{tenantId}` | Associate a tenant with the contract | Contracts and Tenants |
 | `DELETE /accounts/{accountId}/contracts/{contractId}/tenants/{tenantId}` | Remove a tenant association | Contracts and Tenants |
 
-The API must preserve historical contracts and reject overlapping active contracts for the same property unless a supported arrangement explicitly permits the overlap. Validate that the property and every tenant belong to the same account. Contract states, overlap exceptions, date-boundary rules, and immutable historical fields require feature-level definitions.
+Preserve historical contracts and apply the inclusive signed-contract and pending-renewal conflict rules in [Product Requirements](PRODUCT.md#rental-spaces-and-contracts). Signing is a manual status change, not electronic signing. Validate that the property, selected room, and every signer belong to the same account. Define room, early-ending, renewal, notice, and household-information contracts, concurrency handling, state transitions, and immutable historical fields before implementation.
 
 ### Payments
 
@@ -166,7 +168,7 @@ The API must preserve historical contracts and reject overlapping active contrac
 | `PATCH /accounts/{accountId}/payments/{paymentId}` | Update a payment record | Payments |
 | `DELETE /accounts/{accountId}/payments/{paymentId}` | Soft-delete a payment record | Payments |
 
-Payment records must be linked to a contract and represent amount, due date, payment date where applicable, and status. The API must not initiate or claim to process payments; payment-provider integrations are out of first-release scope. Define whether partial receipts and multiple receipts against one expected payment are supported, which statuses are stored versus derived, and how overdue status is calculated.
+Expected rent and cash receipts must be linked to a contract. Support multiple receipts per expected payment, allocation of one receipt across payments, contract-scoped unallocated credit, separately recorded non-cash reductions, optional schedule generation, rent changes, and separate deposit tracking as specified in [Product Requirements](PRODUCT.md#manual-rent-tracking). Preserve the original rent and distinguish money received from reductions and deposits. Apply the specified overdue date and remaining-balance rules; unallocated credit does not reduce the balance until applied. Receipt corrections must retain visible history and require reviewed allocation adjustments if allocations exceed the corrected amount; block receipt deletion while allocations remain and restore eligible receipts as unallocated credit without reinstating allocations. Block deletion of expected-rent entries while allocations or reductions remain; restore eligible entries without automatically reinstating either. Generation skips existing or recoverably deleted entries and suppressed periods, reports conflicts, and must not create duplicates under retries or concurrency. Block manual creation for those deleted or suppressed periods until the original is restored or the period re-enabled. An authorized editor can confirm re-enabling a suppressed period after seeing its effects. Define schedule, receipt, allocation, credit, reduction, deposit and correction schemas/routes, suppression-marker privacy/erasure handling, recovery conflicts with replacement entries, generation matching and conflict handling, and which statuses are stored versus derived. The API must not initiate or claim to process payments; payment-provider integrations are out of first-release scope.
 
 ### Expenses and maintenance
 
@@ -183,7 +185,7 @@ Payment records must be linked to a contract and represent amount, due date, pay
 | `PATCH /accounts/{accountId}/maintenance/{maintenanceId}` | Update status, dates, costs, or details | Maintenance |
 | `DELETE /accounts/{accountId}/maintenance/{maintenanceId}` | Soft-delete a maintenance record | Maintenance |
 
-Expenses may reference a document. Maintenance records may reference related documents. Validate every referenced record against the same account. Expense categories, maintenance states, and allowed state transitions must be defined in feature-level schemas.
+Expenses require a landlord-entered expense date and may reference a document; do not assume the expense date is the payment date. Maintenance records may reference related documents and actual expenses; estimates are separate from actual expenses, and linked actual costs must not be double-counted. Validate every referenced record against the same account and caller permissions. The initial categories and maintenance states are specified in [Product Requirements](PRODUCT.md#expenses-and-maintenance); define detailed schemas and allowed transitions before implementation.
 
 ### Documents
 
@@ -196,7 +198,7 @@ Expenses may reference a document. Maintenance records may reference related doc
 | `PATCH /accounts/{accountId}/documents/{documentId}` | Update editable metadata or association | Documents and access to both associations |
 | `DELETE /accounts/{accountId}/documents/{documentId}` | Soft-delete document metadata and schedule private object cleanup | Documents and access to the associated record |
 
-Document lists must exclude entries whose associated records the caller cannot view. Reading document metadata or content requires at least Viewer access to Documents and the associated record's area. Deletion requires Editor access to Documents and at least Viewer access to the associated record's area. Apply the same associated-record visibility requirement to uploads and to both the old and new associations when updating a document. Keep file bytes in private object storage and metadata/storage keys in the database. Do not return storage keys or unrestricted public URLs. Upload limits, accepted media types, malware scanning, content disposition, and the deletion/restore lifecycle for the stored object must be specified before implementation. An association must point to a supported record in the same account.
+Document lists must exclude entries whose associated records the caller cannot view. Reading document metadata or content requires at least Viewer access to Documents and the associated record's area. Deletion requires Editor access to Documents and at least Viewer access to the associated record's area. Apply the same associated-record visibility requirement to uploads and to both the old and new associations when updating a document. Block deleting an associated record while active documents remain attached; moving or deleting documents requires the relevant permissions. If both record and document are deleted, restore the record before the document, respecting their independent 30-day recovery periods and current permissions. Keep file bytes in private object storage and metadata/storage keys in the database. Do not return storage keys or unrestricted public URLs. Initially accept PDF, JPEG, and PNG up to 20 MB per file, requiring a suitable malware scan before a file is available. Block uploads when scanning is unavailable. Specify safe content verification, quarantine, scanning failures and retries, content disposition, and the remaining deletion/restore lifecycle before implementation. An association must point to a supported record in the same account.
 
 ### Notifications and calendar
 
@@ -206,7 +208,7 @@ Document lists must exclude entries whose associated records the caller cannot v
 | `PATCH /accounts/{accountId}/notifications/{notificationId}` | Update the current member's notification state, such as read/unread | Notifications |
 | `GET /accounts/{accountId}/calendar?from={date}&to={date}` | List permitted upcoming events and important dates in a date range | Relevant source areas |
 
-Notifications are scoped to the current user even when their source record is account-scoped. Calendar results must include only event types and records the user is authorized to view. Delivery remains provider-independent; delivery channels and event generation rules require feature-level definitions.
+Notifications are scoped to the current user even when their source record is account-scoped. Recheck current permissions when notifications are read so revoked access cannot leak record details. Calendar results must include only event types and records the user is authorized to view. Renewal and overdue-rent alerts use in-app notifications and the calendar initially; other event generation and notification details require feature-level definitions. Delivery remains provider-independent.
 
 ### Reports
 
@@ -217,6 +219,8 @@ Notifications are scoped to the current user even when their source record is ac
 | `GET /accounts/{accountId}/reports/expenses` | Expense summary for a requested period, optionally filtered by property or category | Expenses |
 
 Report filters must validate date ranges, account-scoped identifiers, and supported groupings. Results must respect the same per-area authorization as source records. Export formats and additional report types are not specified in this release contract.
+
+The UI defaults reports to the current calendar year and allows a different period. Show original rent due, its agreed reductions, and net rent due by due date from recorded entries only; warn of identifiable gaps without silently estimating or generating entries. Show actual rent received by receipt date separately, counting each receipt once regardless of allocations and excluding deposits; use the current corrected receipt value and date while retaining correction history. Group expenses by their entered expense date, not the app entry date or an assumed payment date. Show overdue rent separately as the current outstanding balance rather than implicitly restricting it to the selected report period. Follow the remaining calculation decisions in [Product Requirements](PRODUCT.md#reports).
 
 ### Settings and activity
 
@@ -246,9 +250,9 @@ Activity entries are read-only through this API. Record enough context to explai
 
 1. Authentication credential design: cookie or authorization header, token/session format, claims, expiry, refresh rotation, revocation, and CSRF protections.
 2. Exact schemas and validation rules for every request and response, including identifiers, addresses, contact fields, and account settings.
-3. Contract, payment, expense, and maintenance status models, transition rules, and date-boundary behavior.
-4. Payment modeling for partial receipts and multiple receipts, and which payment status values are derived.
-5. Upload size/type limits, malware scanning, content delivery safeguards, and object cleanup behavior across delete and restore.
+3. Contract, payment, and maintenance transition rules and date-boundary behavior not settled in the product requirements.
+4. Receipt/allocation/credit and reduction schemas, correction behavior, and which payment status values are derived.
+5. Upload content verification, malware scanning, content delivery safeguards, storage warning thresholds, and object cleanup behavior across delete and restore.
 6. Invitation expiry, duplicate handling, ownership transfer, account closure, and last-owner protection.
 7. Dashboard/report aggregation windows, behavior with partial area access, and any future export requirements.
 8. Default and maximum list page sizes, rate-limit policy, and whether write operations need idempotency keys or optimistic concurrency controls.
