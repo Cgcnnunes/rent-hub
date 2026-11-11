@@ -1,11 +1,15 @@
-'use strict';
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
-const assert = require('node:assert/strict');
-const { execFileSync } = require('node:child_process');
-const path = require('node:path');
-const { test } = require('node:test');
-
-const workspaceRoot = path.resolve(__dirname, '..');
+const require = createRequire(import.meta.url);
+const workspaceRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+);
 const nxPackage = require('nx/package.json');
 const nxBin = path.resolve(
   path.dirname(require.resolve('nx/package.json')),

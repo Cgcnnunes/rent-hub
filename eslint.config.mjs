@@ -25,7 +25,7 @@ export default [
     },
   },
   {
-    files: ['**/*.cjs', '**/*.mjs'],
+    files: ['**/*.cjs', '**/*.mjs', 'scripts/*.ts'],
     languageOptions: {
       globals: {
         __dirname: 'readonly',

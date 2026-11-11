@@ -40,12 +40,6 @@ jobs:
             exit 1
           fi
 
-      - name: Validate PR title and commit subjects
-        run: node scripts/validate-commit-messages.cjs
-
-      - name: Test commit subject validation
-        run: node --test scripts/validate-commit-messages.test.cjs
-
       - name: Check patch whitespace
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -55,7 +49,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.22.2
+          node-version: 24.22.3
           cache: npm
 
       - name: Install dependencies
@@ -63,12 +57,19 @@ jobs:
         env:
           HUSKY: 0
 
+      - name: Validate PR title and commit subjects
+        run: node scripts/validate-commit-messages.ts
+
+      - name: Type-check and test repository scripts
+        run: |
+          npx tsc -p scripts/tsconfig.json
+          node --test scripts/validate-commit-messages.test.ts scripts/hooks.test.ts
+
       - name: Check formatting and repository tooling
         run: |
           npm run format:check
           npm run lint
           npm run test:graph
-          node --test scripts/hooks.test.cjs
 
       - name: Install Chromium for browser tests
         run: npx playwright install --with-deps chromium

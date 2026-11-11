@@ -7,8 +7,8 @@
     "packages/*"
   ],
   "engines": {
-    "node": ">=22.18.0 <23",
-    "npm": ">=10"
+    "node": ">=24.11.0 <25",
+    "npm": ">=11"
   },
   "scripts": {
     "build": "nx run-many -t build",
@@ -18,14 +18,14 @@
     "prepare": "husky",
     "test": "nx run-many -t test",
     "test:e2e": "nx run web:test-e2e",
-    "test:graph": "node --test scripts/affected-graph.test.cjs",
-    "typecheck": "nx run-many -t typecheck"
+    "test:graph": "node --test scripts/affected-graph.test.ts",
+    "typecheck": "tsc -p scripts/tsconfig.json && nx run-many -t typecheck"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@eslint/js": "^9.39.5",
     "@playwright/test": "^1.65.0",
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "eslint": "^9.39.5",

@@ -1,8 +1,7 @@
-'use strict';
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
 
-const assert = require('node:assert/strict');
-const { test } = require('node:test');
-const { validateSubject } = require('./validate-commit-messages.cjs');
+import { validateSubject } from './validate-commit-messages.ts';
 
 test('accepts each documented type and lowercase descriptions', () => {
   for (const type of ['feat', 'chore', 'refactor', 'fix', 'doc']) {

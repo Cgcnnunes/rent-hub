@@ -1,1 +1,8 @@
-node scripts/pre-push.cjs
+set -e
+if [ "$(node scripts/push-policy.ts)" = "branch" ]; then
+  base=$(git merge-base origin/main HEAD)
+  npx tsc -p scripts/tsconfig.json
+  node --test scripts/validate-commit-messages.test.ts scripts/hooks.test.ts
+  npx nx affected -t test typecheck --base="$base" --head=HEAD
+  npm run build
+fi

@@ -1,6 +1,6 @@
 'use strict';
 
-const { validateSubject } = require('./scripts/validate-commit-messages.cjs');
+const { validateSubject } = require('./scripts/validate-commit-messages.ts');
 
 module.exports = {
   defaultIgnores: false,

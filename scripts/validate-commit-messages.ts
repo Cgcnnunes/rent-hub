@@ -1,9 +1,9 @@
-'use strict';
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const { execFileSync } = require('node:child_process');
-const { readFileSync } = require('node:fs');
-
-function validateSubject(subject) {
+export function validateSubject(subject: string): string | null {
   const match = /^(feat|chore|refactor|fix|doc)\(rent-[0-9]{5}\): (.+)$/u.exec(
     subject,
   );
@@ -25,7 +25,16 @@ function validateSubject(subject) {
   return null;
 }
 
-function validatePullRequest(event) {
+interface PullRequestEvent {
+  number: number;
+  pull_request: {
+    base: { sha: string };
+    head: { sha: string };
+    title: string;
+  };
+}
+
+function validatePullRequest(event: PullRequestEvent): string[] {
   if (
     !event.pull_request ||
     !Number.isSafeInteger(event.number) ||
@@ -73,7 +82,10 @@ function validatePullRequest(event) {
   return errors;
 }
 
-if (require.main === module) {
+if (
+  process.argv[1] &&
+  resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
   try {
     if (!process.env.GITHUB_EVENT_PATH) {
       throw new Error('GITHUB_EVENT_PATH is required.');
@@ -96,9 +108,9 @@ if (require.main === module) {
       );
     }
   } catch (error) {
-    console.error(`::error::Commit validation failed: ${error.message}`);
+    console.error(
+      `::error::Commit validation failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
     process.exitCode = 1;
   }
 }
-
-module.exports = { validateSubject };

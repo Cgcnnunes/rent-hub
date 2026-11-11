@@ -10,7 +10,7 @@ Node API serving, actual Worker runtime tests, local data services, and a Next.j
 
 ## Local setup and commands
 
-Install Node.js 22.18 or later within major version 22 and npm 10 or later. Node.js 22.22.2 and npm 10.9.7 were used for validation. From the repository root in a clean checkout:
+Install Node.js 24 LTS (24.11 or later, below 25) and npm 11 or later. Node.js 24.22.3 and npm 11.19.1 were used for validation. From the repository root in a clean checkout:
 
 ```sh
 npm ci
@@ -67,13 +67,20 @@ Allowed commit types are `feat`, `chore`, `refactor`, `fix`, and `doc`. The lowe
 
 ## Git hooks
 
-- **Pre-commit:** check formatting of staged files, lint the workspace, run tooling tests and affected unit tests. Partially staged files must have their remaining changes staged or set aside first, so checks cannot validate a different version from the commit.
+- **Pre-commit:** `git diff --cached --check` rejects whitespace errors and conflict markers; `node scripts/check-staged.ts` checks formatting for staged files and rejects partially staged files; `npm run lint` lints the workspace. Partially staged files must have their remaining changes staged or set aside first, so checks cannot validate a different version from the commit.
 - **Commit-msg:** Commitlint uses the same subject validator as PR validation. It enforces the format, allowed type, lowercase description, and description length without allocating identifiers.
-- **Pre-push:** reject pushes to `main` and nonconforming feature branches; check formatting, lint and tooling tests, then run affected lint, types, unit tests, builds and browser tests against the local `origin/main` merge base. Fetch `origin/main` before pushing. Chromium must be installed as above.
+- **Pre-push:** `node scripts/push-policy.ts` validates the branch refs; `git merge-base` selects the local `origin/main` base. `tsc` type-checks the scripts and `node --test` tests their policies; `nx affected` runs unit tests and type checks for affected projects, and `npm run build` builds the workspace. Generated build files remain ignored by Git. Fetch `origin/main` before pushing; browser tests run in PR validation rather than this hook.
 
 Husky installs the hooks during `npm ci`; PR validation remains authoritative. Local hooks do not access PROD resources.
 
-The PR workflow validates each PR commit subject and the PR title, including the GitHub squash suffix. It uses `node --test scripts/validate-commit-messages.test.cjs` to test the validator. A PR check cannot validate edits made to the squash message at merge time. A GitHub-side commit metadata restriction was rejected by the current repository configuration, so the person merging must check the final subject. The existing administrator bypass also remains in place.
+The PR workflow validates each PR commit subject and the PR title, including the GitHub squash suffix. It uses `node --test scripts/validate-commit-messages.test.ts` to test the validator. A PR check cannot validate edits made to the squash message at merge time. A GitHub-side commit metadata restriction was rejected by the current repository configuration, so the person merging must check the final subject. The existing administrator bypass also remains in place.
+
+The remaining scripts use TypeScript with Node 24's built-in type stripping, and `scripts/tsconfig.json` provides explicit type checking:
+
+- `check-staged.ts` selects staged files and verifies that the files checked match the versions being committed.
+- `push-policy.ts` validates each branch ref passed by Git and reports whether a branch needs checks.
+- `validate-commit-messages.ts` shares commit-subject rules between Commitlint and PR validation, including the squash-title suffix.
+- `hooks.test.ts`, `validate-commit-messages.test.ts`, and `affected-graph.test.ts` test the hook policy, subject rules, and Nx project/target selection.
 
 ## Code conventions
 
