@@ -4,6 +4,9 @@ export interface HealthResponse {
   };
 }
 
-export function healthResponse(): HealthResponse {
-  return { data: { status: 'ok' } };
+export interface ErrorResponse {
+  error: {
+    code: string;
+    message: string;
+  };
 }

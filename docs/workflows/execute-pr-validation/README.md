@@ -55,7 +55,8 @@ flowchart TD
 3. **Validate app** runs in parallel for each affected app. It runs available
    lint, type-check, unit-test, and build targets for the whole project. If
    the project has a `test-e2e` target, the job installs Chromium and runs
-   that target. The current API build type-checks only; it is not a
+   that target. API tests include local Node HTTP and Workerd integration
+   tests and are not cached. The current API build type-checks only; it is not a
    deployable artifact.
 4. **Validate affected shared projects** runs available lint, type-check,
    unit-test, and build targets for affected non-app projects. Empty app or
