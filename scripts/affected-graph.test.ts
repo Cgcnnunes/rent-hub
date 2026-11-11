@@ -6,11 +6,14 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
+
 const workspaceRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
 );
+
 const nxPackage = require('nx/package.json');
+
 const nxBin = path.resolve(
   path.dirname(require.resolve('nx/package.json')),
   nxPackage.bin.nx,
@@ -74,6 +77,7 @@ for (const { file, projects, target } of [
         env: { ...process.env, NX_DAEMON: 'false' },
       },
     );
+
     assert.deepEqual(JSON.parse(output).sort(), projects);
   });
 }

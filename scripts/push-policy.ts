@@ -19,6 +19,7 @@ export function validatePushRef(
   current: string,
 ): void {
   validatePushDestination(remoteRef);
+
   if (!branchPattern.test(localRef) || localRef !== current) {
     throw new Error(
       'Push only the current rent-xxxxx feature branch to a rent-xxxxx branch.',
@@ -31,18 +32,27 @@ if (
   resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 ) {
   const refs = readFileSync(0, 'utf8').trim().split('\n').filter(Boolean);
+
   let hasBranch = false;
+
   for (const ref of refs) {
     const [localRef, localSha, remoteRef] = ref.trim().split(/\s+/u);
+
     if (!localRef || !localSha || !remoteRef)
       throw new Error('Invalid push ref input.');
+
     if (!remoteRef.startsWith('refs/heads/')) continue;
+
     validatePushDestination(remoteRef);
+
     const current = execFileSync('git', ['symbolic-ref', '-q', 'HEAD'], {
       encoding: 'utf8',
     }).trim();
+
     validatePushRef(localRef, remoteRef, current);
+
     if (!/^0+$/u.test(localSha)) hasBranch = true;
   }
+
   if (hasBranch) console.log('branch');
 }

@@ -22,12 +22,15 @@ if (files.length) {
   const unstaged = spawnSync('git', ['diff', '--quiet', '--', ...files], {
     cwd: root,
   });
+
   if (unstaged.error) throw unstaged.error;
+
   if (unstaged.status !== 0) {
     throw new Error(
       'Stage or discard unstaged changes in partially staged files before committing.',
     );
   }
+
   const result = spawnSync(
     process.execPath,
     [
@@ -38,6 +41,8 @@ if (files.length) {
     ],
     { cwd: root, stdio: 'inherit' },
   );
+
   if (result.error) throw result.error;
+
   if (result.status !== 0) process.exit(result.status || 1);
 }

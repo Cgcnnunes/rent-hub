@@ -47,8 +47,11 @@ for (const { file, apps, packages } of [
 ]) {
   test(`selects the correct CI jobs for ${file}`, () => {
     const selected = affectedProjects([`--files=${file}`]);
+
     assert.deepEqual(selected.apps.map((app) => app.name).sort(), apps);
+
     assert.deepEqual(selected.packages.sort(), packages);
+
     if (apps.includes('web')) {
       assert.equal(
         selected.apps.find((app) => app.name === 'web')?.browser,

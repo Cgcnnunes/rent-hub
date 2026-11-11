@@ -11,8 +11,11 @@ function isValid(subject: string): boolean {
     input: subject,
     encoding: 'utf8',
   });
+
   if (result.error) throw result.error;
+
   assert.notEqual(result.status, null, result.stderr);
+
   return result.status === 0;
 }
 
