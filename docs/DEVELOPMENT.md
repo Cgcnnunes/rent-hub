@@ -2,11 +2,39 @@
 
 ## Current status
 
-The foundation is in progress. Node.js 22.22.2 and npm 10.9.7 were used to validate the initial workspace. From a clean checkout, run `npm ci`, then `npm run typecheck`, `npm test`, and `npm run build`. The initial web page and API health handler are scaffolding, not business features. The API build currently type-checks only; it is not a deployable artifact.
+The foundation is in progress. The initial web page and API health handler are scaffolding, not business features. The API build currently type-checks only; it is not a deployable artifact.
 
-The workspace contains `apps/web`, `apps/api`, `packages/contracts`, and `packages/localization`. Nx models their current workspace dependencies; verification of a genuinely shared change affecting both apps remains outstanding. Node API serving, actual Worker runtime tests, local data services, lint/format and hooks, CI quality gates, and a Next.js-on-Workers prototype remain to be implemented and verified.
+Node API serving, actual Worker runtime tests, local data services, lint/format and hooks, CI quality gates, and a Next.js-on-Workers prototype remain to be implemented and verified.
 
 `npm audit` currently reports a moderate-severity development dependency advisory in the Nx/minimatch chain; production dependencies reported no advisories during this validation. Track and re-evaluate the advisory before considering the foundation complete.
+
+## Local setup and commands
+
+Install Node.js 22.18 or later within major version 22 and npm 10 or later. Node.js 22.22.2 and npm 10.9.7 were used for validation. From the repository root in a clean checkout:
+
+```sh
+npm ci
+npm run typecheck
+npm test
+npm run test:graph
+npm run build
+```
+
+`npm test` runs the available API handler tests. `npm run test:graph` checks Nx affected selection for isolated web and API changes and for each shared package. `npm run build` builds the web app and type-checks the remaining projects; it does not produce an API server or deployment artifact. CI does not yet run these commands.
+
+To run the scaffold web page locally, execute `npm run dev --workspace @rent-hub/web` from the repository root and visit `http://localhost:3000`. Stop the server with Ctrl+C. There is no local API server yet, and no environment variables or production credentials are required for these commands.
+
+Next.js automatic agent-rule file generation is disabled so starting the web server does not modify the working tree; follow the repository's `AGENTS.md` and the installed Next.js documentation when working on the web app.
+
+## Workspace layout
+
+- `apps/web`: Next.js client; depends on `packages/localization`.
+- `apps/api`: Web Request/Response health handler and Worker-shaped entry; depends on `packages/contracts`.
+- `packages/contracts`: initial health response contract used by the API.
+- `packages/localization`: initial Portuguese UI messages used by the web app.
+- `scripts`: bootstrap PR validation and affected-graph verification.
+
+Nx models each shared package's actual consumers. Neither existing package is currently consumed by both apps; cross-app shared-package selection will need verification when such a dependency exists. Nx cache correctness and affected quality checks remain work for the quality foundation.
 
 ## Planned foundation
 

@@ -57,4 +57,4 @@ jobs:
         run: git diff --check "$BASE_SHA...$HEAD_SHA"
 
       - name: Report current validation scope
-        run: echo "::notice::This documentation-only baseline has no application packages yet. Nx lint, format, type, test, and build tasks must be added with the workspace foundation."
+        run: echo "::notice::This bootstrap check does not run workspace lint, format, type, test, or build tasks. Add authoritative Nx quality checks in the foundation."
