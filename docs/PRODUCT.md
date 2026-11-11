@@ -27,7 +27,7 @@ The first usable release is intended to include all modules listed below. The pr
   - **Viewer:** can view records in the area.
   - **Editor:** can view, add, change, and delete records in the area.
 - The account owner has account-management authority. Editors cannot manage members or their access.
-- Deleted records remain in a deleted-items area for 30 days and can be restored during that period. They are permanently deleted after the retention period.
+- Deleted records remain in a deleted-items area for 30 days and can be restored during that period. Viewers can see deleted records in areas they may view; only Editors can restore records in their permitted areas. They are permanently deleted after the retention period.
 - Authorization must be enforced by the backend, not only by hiding interface elements.
 
 The initial business model remains account-based even when an account has only one person. The database design must support memberships and per-area access from the start without introducing an unnecessarily complex custom role builder.
@@ -38,7 +38,7 @@ The initial business model remains account-based even when an account has only o
 |---|---|
 | Dashboard | Property and active-contract summaries, upcoming and overdue payments, recent activity, maintenance, and important dates. |
 | Properties | Create and edit properties; view details, address, associated tenants and contracts, and related records. |
-| Tenants | Manage tenant information through the associated property; support multiple tenants on a contract. |
+| Tenants | Manage tenant information through the associated property; provide an Add Tenant action on the property page to users who may view the property and add tenants; support multiple tenants on a contract. |
 | Contracts | Manage dates and status, retain historical contracts, and prevent overlapping active contracts unless an explicitly supported arrangement permits them. |
 | Payments | Record expected and received rent, due dates, payment dates, amounts, status, and overdue payments, associated with contracts. Manual tracking is the first-release scope; payment-provider integrations are deferred. |
 | Expenses | Record and categorize property expenses, with optional related documents. |
@@ -68,6 +68,14 @@ The exact table names, relationships, and constraints are implementation decisio
 ## UI proposal preference
 
 Whenever a UI is proposed for selection, present exactly four variants for the user to choose from.
+
+## Selected UI direction and themes
+
+- Use the Atlantic structure and shared components across desktop, tablet, and mobile.
+- Offer Ledger, Atlantic, Bento, Casa, and Dark as visual themes. All themes retain the same structure, functionality, and permissions.
+- Ledger is the default for anonymous visitors and newly created accounts. Save a user's selection in database-backed user preferences, shared across sessions, devices, and account switches.
+- A browser may cache the selected theme for faster navigation while the user is logged in. The database preference is authoritative: refresh it at sign-in, prefer it over a conflicting cache, and clear the cache on logout.
+- Report preference-saving failures rather than silently presenting a change as saved.
 
 ## Localization
 

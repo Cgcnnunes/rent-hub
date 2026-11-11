@@ -22,6 +22,8 @@ flowchart LR
 
 The Node.js and Cloudflare Worker entry points must call the same application behavior through isolated runtime adapters. Local Node.js success does not prove that the Worker runtime supports a dependency or API.
 
+Maintain a current record of each material Node.js/Workers incompatibility, the affected capability, its workaround or adapter, and remaining limitations. Validate compatibility in the actual Worker runtime; do not silently compromise required behavior.
+
 ## Technology decisions
 
 | Concern | Decision |
@@ -51,6 +53,8 @@ Own business rules, invariants, domain services, events, exceptions, and busines
 ### Infrastructure
 
 Implements persistence, file storage, authentication, authorization, logging, email, notifications, external APIs, configuration/secrets access, and runtime/provider integration. Provider-specific code belongs here or in dedicated adapters.
+
+Use a small provider-independent logging interface with a Cloudflare-compatible implementation initially. Log important successes and failures with enough context for troubleshooting, rather than every routine operation. Do not log passwords, tokens, file contents, or unnecessary personal data. Operational logging is distinct from the user-visible activity log.
 
 ### Shared
 

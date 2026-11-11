@@ -15,6 +15,8 @@ This repository is in its planning and foundation phase. Follow this guide as im
 
 The commit identifier sequence is separate from feature-branch numbering. Its collision-safe allocation and validation mechanism must be decided before commit hooks enforce it.
 
+Use `feat`, `chore`, `refactor`, `fix`, or `doc` as the commit type. The lowercase description must not exceed 120 characters. See the [development workflow](docs/DEVELOPMENT.md) for planned hook responsibilities.
+
 ## `main` branch policy
 
 The active `Protect main` ruleset currently:

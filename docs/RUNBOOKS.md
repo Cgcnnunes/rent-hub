@@ -16,7 +16,7 @@ Document manual dispatch from an eligible Git tag, validation of the tag, enviro
 
 ### Roll back PROD
 
-Document how to select an older eligible tag, verify the intended rollback, deploy it, run smoke tests, record the rollback, and communicate the result. A failed deployment must be retryable; a successful tag must not be redeployed as a normal release.
+Document how to explicitly select an older tag previously deployed successfully to PROD, verify the intended rollback and its database-schema compatibility, deploy it, run smoke tests, record the rollback, and communicate the result. Stop when database compatibility is unknown or unsafe; database restoration or reverse migrations require a separate deliberate operation. Do not create or promote a duplicate release for a rollback. A failed deployment must be retryable; a successful tag must not be redeployed as a normal release.
 
 ### Database migration
 

@@ -24,6 +24,11 @@ This log records choices gathered for the initial project baseline. Revisit deci
 | Repository | Public, no license, default branch `main` | Public viewing without granting an open-source reuse license |
 | Main protection | Active ruleset requires pull requests, one approval, and the `PR validation` status check; blocks direct pushes, deletions, and force pushes; repository admins may bypass | Protect the default branch while retaining the requested admin bypass |
 | UI proposals | Show four variants for selection | Explicit user preference |
+| Selected UI | Atlantic shared structure with Ledger, Atlantic, Bento, Casa, and Dark themes; Ledger is the default | Keep layouts, functionality, and permissions consistent across themes |
+| Theme preference | Store per user in the database; an optional logged-in browser cache is cleared on logout | Sync choices across sessions and devices while keeping the database authoritative |
+| Deleted items | Account-scoped; Viewers can list records in their permitted areas, Editors can restore | Preserve area permissions during the recovery period |
+| Rollback | Explicitly redeploy an older, previously successful PROD release after checking database compatibility | Allow known-release recovery without treating it as a new release |
+| Release version | Apply the highest PR release type once to the latest created release or TEST pre-release | Produce a single next version for a release containing multiple PRs |
 
 ## Pending validation or implementation choice
 

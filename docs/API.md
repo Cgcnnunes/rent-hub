@@ -86,7 +86,7 @@ Validation errors should identify the relevant input field where safe. Never ret
 - Filters and sort fields must be explicitly allow-listed per endpoint. Do not accept arbitrary SQL-like expressions or silently ignore invalid filters.
 - Sort order must be deterministic, including a unique tie-breaker, so clients can page reliably.
 - Business-record deletion is a soft delete. Deleted records are excluded from normal reads and lists and remain recoverable for 30 days.
-- `GET /deleted-items` lists records the current user may restore. `POST /deleted-items/{resourceType}/{resourceId}/restore` restores a record before its recovery period expires and requires Editor access to its application area. Expired records cannot be restored; permanent cleanup is an internal scheduled operation, not a public endpoint.
+- `GET /accounts/{accountId}/deleted-items` lists deleted records in the selected account for which the caller has at least Viewer access to the relevant application area. `POST /accounts/{accountId}/deleted-items/{resourceType}/{resourceId}/restore` restores an eligible record before its recovery period expires and requires Editor access to its application area. Both operations require account membership and must not expose records from other accounts. Expired records cannot be restored; permanent cleanup is an internal scheduled operation, not a public endpoint.
 - Child records, attached documents, and activity history must follow the deletion and restoration rules in [Database Model](DATABASE.md). Define cascade behavior for each resource before implementing its delete operation.
 
 ## Proposed endpoint inventory
@@ -189,14 +189,14 @@ Expenses may reference a document. Maintenance records may reference related doc
 
 | Method and path | Purpose | Access |
 |---|---|---|
-| `GET /accounts/{accountId}/documents` | List document metadata; support related-record filters | Documents |
+| `GET /accounts/{accountId}/documents` | List document metadata; support related-record filters | Documents and access to each associated record |
 | `POST /accounts/{accountId}/documents` | Upload a private document and associate it with an allowed business record | Documents and access to the associated record |
 | `GET /accounts/{accountId}/documents/{documentId}` | Get document metadata | Documents and access to the associated record |
 | `GET /accounts/{accountId}/documents/{documentId}/content` | Download or stream document content through the authenticated API | Documents and access to the associated record |
 | `PATCH /accounts/{accountId}/documents/{documentId}` | Update editable metadata or association | Documents and access to both associations |
-| `DELETE /accounts/{accountId}/documents/{documentId}` | Soft-delete document metadata and schedule private object cleanup | Documents |
+| `DELETE /accounts/{accountId}/documents/{documentId}` | Soft-delete document metadata and schedule private object cleanup | Documents and access to the associated record |
 
-Keep file bytes in private object storage and metadata/storage keys in the database. Do not return storage keys or unrestricted public URLs. Upload limits, accepted media types, malware scanning, content disposition, and the deletion/restore lifecycle for the stored object must be specified before implementation. An association must point to a supported record in the same account.
+Document lists must exclude entries whose associated records the caller cannot view. Reading document metadata or content requires at least Viewer access to Documents and the associated record's area. Deletion requires Editor access to Documents and at least Viewer access to the associated record's area. Apply the same associated-record visibility requirement to uploads and to both the old and new associations when updating a document. Keep file bytes in private object storage and metadata/storage keys in the database. Do not return storage keys or unrestricted public URLs. Upload limits, accepted media types, malware scanning, content disposition, and the deletion/restore lifecycle for the stored object must be specified before implementation. An association must point to a supported record in the same account.
 
 ### Notifications and calendar
 
@@ -224,8 +224,8 @@ Report filters must validate date ranges, account-scoped identifiers, and suppor
 |---|---|---|
 | `GET /accounts/{accountId}/settings` | Read account-level settings | Owner |
 | `PATCH /accounts/{accountId}/settings` | Update account-level settings | Owner |
-| `GET /me/preferences` | Read the current user's locale, formatting, and notification preferences | Authenticated |
-| `PATCH /me/preferences` | Update the current user's preferences | Authenticated |
+| `GET /me/preferences` | Read the current user's theme, locale, formatting, and notification preferences | Authenticated |
+| `PATCH /me/preferences` | Update the current user's theme, locale, formatting, and notification preferences | Authenticated |
 | `GET /accounts/{accountId}/activity` | List relevant account activity with filters and pagination | Activity |
 
 Activity entries are read-only through this API. Record enough context to explain relevant actions without retaining unnecessary personal data, secrets, or full document contents. Define which actions are recorded and the retention policy before implementation.
