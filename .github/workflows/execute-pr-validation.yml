@@ -42,6 +42,13 @@ jobs:
             exit 1
           fi
 
+      - name: Validate PR title and commit subjects
+        if: github.event_name == 'pull_request'
+        run: node scripts/validate-commit-messages.cjs
+
+      - name: Test commit subject validation
+        run: node --test scripts/validate-commit-messages.test.cjs
+
       - name: Check patch whitespace
         if: github.event_name == 'pull_request'
         env:

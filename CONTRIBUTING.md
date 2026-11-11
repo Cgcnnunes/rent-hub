@@ -10,8 +10,9 @@ This repository is in its planning and foundation phase. Follow this guide as im
 4. Update related documentation and the glossary.
 5. Run the relevant local checks.
 6. Commit using `type(rent-xxxxx): concise lowercase description`.
-7. Open a pull request targeting `main` and select exactly one release type: Major, Minor, or Patch.
+7. Open a pull request targeting `main`, use the commit format for its title, and select exactly one release type: Major, Minor, or Patch.
 8. Pass PR validation and obtain one approval before merging.
+9. Squash and merge using a correctly formatted final commit subject.
 
 The commit identifier sequence is separate from feature-branch numbering. Its collision-safe allocation and validation mechanism must be decided before commit hooks enforce it.
 
@@ -27,7 +28,9 @@ The active `Protect main` ruleset currently:
 - Block force pushes.
 - Allow the repository owner/admin to bypass these rules.
 
-The `execute-pr-validation.yml` workflow currently checks the PR release selection and patch whitespace. Expand it to run Nx lint, format, type, test, and build tasks when the application workspace is added.
+GitHub is configured to allow only squash merges, using the PR title as the default squash subject. The merger must ensure the final subject still follows the convention: PR validation cannot check edits made at merge time. A server-side commit metadata restriction was rejected by the current repository configuration.
+
+The `execute-pr-validation.yml` workflow checks the PR release selection, commit subjects, PR title, and patch whitespace. The PR title must leave space for GitHub's ` (#number)` suffix within the description's 120-character limit. Expand the workflow to run Nx lint, format, type, test, and build tasks when the application workspace is added.
 
 ## Checks
 
