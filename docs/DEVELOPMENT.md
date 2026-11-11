@@ -44,11 +44,10 @@ GitHub Actions caches npm's download cache using the lockfile through `setup-nod
 
 ## Planned foundation
 
-The first implementation phase should add:
+The remaining foundation work includes:
 
-- npm workspace configuration and strict TypeScript.
-- Nx project/task configuration for affected deployments.
-- Local Node.js and Cloudflare-compatible development adapters.
+- Deployment workflows and Nx project/task configuration for affected deployments.
+- A local Node.js server and verified Cloudflare runtime adapters.
 - Local database, migrations, and test data that do not use PROD resources.
 
 ## Branch and pull request workflow
@@ -85,7 +84,10 @@ The remaining scripts use TypeScript with Node 24's built-in type stripping, and
 - `check-staged.ts` selects staged files and verifies that the files checked match the versions being committed.
 - `push-policy.ts` validates each branch ref passed by Git and reports whether a branch needs checks.
 - `commitlint.config.ts` defines the subject rules used for commits and PR validation; the PR workflow adds the squash-title suffix before checking the title.
-- `hooks.test.ts`, `validate-commit-messages.test.ts`, and `affected-graph.test.ts` test the hook policy, subject rules, and Nx project/target selection.
+- `ci-projects.ts` selects the app matrix and shared-project checks for PR validation.
+- `hooks.test.ts`, `validate-commit-messages.test.ts`, `affected-graph.test.ts`, and `ci-projects.test.ts` test hook policy, subject rules, and Nx selection.
+
+See the [script reference](../scripts/README.md) for invocation, inputs, and failure handling, and the [PR validation guide](workflows/execute-pr-validation/README.md) for the workflow's jobs and diagram.
 
 ## Code conventions
 
@@ -100,4 +102,4 @@ The remaining scripts use TypeScript with Node 24's built-in type stripping, and
 
 ## Documentation lifecycle
 
-Documentation is part of implementation. Keep active guides aligned with actual behavior, remove obsolete instructions when a feature changes, preserve released history in `CHANGELOG.md`, and update the glossary when introducing terms.
+Documentation is part of implementation. Keep active guides aligned with actual behavior, remove obsolete instructions when a feature changes, preserve released history in `CHANGELOG.md`, and update the glossary when introducing terms. Follow the [documentation standard](DOCUMENTATION.md) for workflow and script READMEs.

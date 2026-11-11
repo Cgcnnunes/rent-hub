@@ -86,4 +86,4 @@ The planned local setup must run the web app, API, database, migrations, mock da
 
 Nx should run tasks for changed projects and their dependents, while caching deterministic task outputs. Declare task inputs and outputs correctly. A change to a shared package must trigger all dependent app checks/builds; unrelated app changes should not.
 
-PR validation is authoritative and must include type checking, linting, formatting validation, unit tests, relevant integration tests, and build validation. Do not bypass a failing quality gate to make a workflow pass.
+PR validation currently includes type checking, linting, formatting validation, available unit and browser tests, and build validation. Integration and Worker runtime tests remain planned and must be added when those capabilities are implemented. Do not bypass a failing quality gate to make a workflow pass. See the [PR validation guide](workflows/execute-pr-validation/README.md) for its exact flow.

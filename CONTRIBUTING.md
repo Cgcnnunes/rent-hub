@@ -16,7 +16,7 @@ This repository is in its planning and foundation phase. Follow this guide as im
 
 The commit identifier sequence is separate from feature-branch numbering. Its collision-safe allocation and validation mechanism must be decided before commit hooks enforce it.
 
-Use `feat`, `chore`, `refactor`, `fix`, or `doc` as the commit type. The lowercase description must not exceed 120 characters. See the [development workflow](docs/DEVELOPMENT.md) for planned hook responsibilities.
+Use `feat`, `chore`, `refactor`, `fix`, or `doc` as the commit type. The lowercase description must not exceed 120 characters. See the [development workflow](docs/DEVELOPMENT.md) for current hook responsibilities.
 
 ## `main` branch policy
 
@@ -34,11 +34,13 @@ The `execute-pr-validation.yml` workflow checks the PR release selection, commit
 
 ## Checks
 
-Run the setup and checks documented in the [development workflow](docs/DEVELOPMENT.md). Install Chromium before running browser tests or pushing a web change. Broader integration and Worker runtime tests remain planned.
+Run the setup and checks documented in the [development workflow](docs/DEVELOPMENT.md). Install Chromium before running browser tests locally; pre-push does not run browser tests. Broader integration and Worker runtime tests remain planned.
 
 ## Documentation
 
 Documentation is part of each change, not a follow-up task. Remove obsolete active instructions when behavior changes; keep release history in `CHANGELOG.md`.
+
+Follow the [workflow and script documentation standard](docs/DOCUMENTATION.md) when adding or changing workflows or scripts.
 
 ## License
 

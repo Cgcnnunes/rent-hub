@@ -6,6 +6,8 @@ No application deployment workflows or Cloudflare resources have been created ye
 
 The GitHub `main` ruleset requires a pull request, one approval, and the `PR validation` status check; it blocks direct pushes, deletions, and force pushes, and allows repository admins to bypass. The `execute-pr-validation.yml` workflow checks release selection, PR commit subjects and title, patch whitespace, formatting and root tooling; it runs lint, type checks, tests and builds for affected apps and shared projects against the PR base and head. The required check aggregates all applicable jobs.
 
+See the [PR validation workflow guide](workflows/execute-pr-validation/README.md) for triggers, jobs, and troubleshooting.
+
 ## Environments
 
 | Environment | Purpose                                                                        | Isolation                                                         |

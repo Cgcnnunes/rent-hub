@@ -138,6 +138,8 @@ commit the work you intend to push before relying on affected selection.
 
 Node 24 runs these TypeScript files using built-in type stripping; that does
 not check their types, which is why the separate `tsc` command matters.
+For each script's inputs, outputs, failure behavior, and test coverage, see the
+[script reference](../scripts/README.md).
 
 ## If a check fails
 
