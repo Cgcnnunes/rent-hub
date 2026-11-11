@@ -6,5 +6,5 @@
     "module": "ESNext",
     "types": ["node"]
   },
-  "include": ["*.ts"]
+  "include": ["*.ts", "../commitlint.config.ts"]
 }

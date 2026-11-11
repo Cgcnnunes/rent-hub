@@ -79,7 +79,7 @@ The remaining scripts use TypeScript with Node 24's built-in type stripping, and
 
 - `check-staged.ts` selects staged files and verifies that the files checked match the versions being committed.
 - `push-policy.ts` validates each branch ref passed by Git and reports whether a branch needs checks.
-- `commitlint.config.cjs` defines the subject rules used for commits and PR validation; the PR workflow adds the squash-title suffix before checking the title.
+- `commitlint.config.ts` defines the subject rules used for commits and PR validation; the PR workflow adds the squash-title suffix before checking the title.
 - `hooks.test.ts`, `validate-commit-messages.test.ts`, and `affected-graph.test.ts` test the hook policy, subject rules, and Nx project/target selection.
 
 ## Code conventions

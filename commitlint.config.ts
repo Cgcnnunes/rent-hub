@@ -1,6 +1,7 @@
-'use strict';
+import type { UserConfig } from '@commitlint/types';
+import { RuleConfigSeverity } from '@commitlint/types';
 
-module.exports = {
+const config: UserConfig = {
   defaultIgnores: false,
   parserPreset: {
     parserOpts: {
@@ -33,12 +34,18 @@ module.exports = {
     },
   ],
   rules: {
-    'description-length': [2, 'always'],
-    'description-lowercase': [2, 'always'],
-    'description-not-blank': [2, 'always'],
-    'scope-empty': [2, 'never'],
-    'subject-empty': [2, 'never'],
-    'type-empty': [2, 'never'],
-    'type-enum': [2, 'always', ['feat', 'chore', 'refactor', 'fix', 'doc']],
+    'description-length': [RuleConfigSeverity.Error, 'always'],
+    'description-lowercase': [RuleConfigSeverity.Error, 'always'],
+    'description-not-blank': [RuleConfigSeverity.Error, 'always'],
+    'scope-empty': [RuleConfigSeverity.Error, 'never'],
+    'subject-empty': [RuleConfigSeverity.Error, 'never'],
+    'type-empty': [RuleConfigSeverity.Error, 'never'],
+    'type-enum': [
+      RuleConfigSeverity.Error,
+      'always',
+      ['feat', 'chore', 'refactor', 'fix', 'doc'],
+    ],
   },
 };
+
+export default config;
