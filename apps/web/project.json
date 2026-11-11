@@ -2,7 +2,13 @@
   "name": "web",
   "sourceRoot": "apps/web/app",
   "targets": {
-    "build": { "command": "next build apps/web", "outputs": ["{projectRoot}/.next"] },
-    "typecheck": { "command": "tsc -p apps/web/tsconfig.json" }
+    "build": {
+      "command": "next build apps/web",
+      "cache": false,
+      "outputs": ["{projectRoot}/.next"]
+    },
+    "lint": { "command": "eslint apps/web --max-warnings=0" },
+    "typecheck": { "command": "tsc -p apps/web/tsconfig.json" },
+    "test-e2e": { "command": "playwright test", "cache": false }
   }
 }

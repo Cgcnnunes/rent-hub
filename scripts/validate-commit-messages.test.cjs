@@ -31,6 +31,12 @@ test('rejects uppercase and whitespace-only descriptions', () => {
 test('enforces the description length including the squash suffix', () => {
   assert.equal(validateSubject(`doc(rent-00001): ${'a'.repeat(120)}`), null);
   assert.notEqual(validateSubject(`doc(rent-00001): ${'a'.repeat(121)}`), null);
-  assert.equal(validateSubject(`doc(rent-00001): ${'a'.repeat(114)} (#34)`), null);
-  assert.notEqual(validateSubject(`doc(rent-00001): ${'a'.repeat(115)} (#34)`), null);
+  assert.equal(
+    validateSubject(`doc(rent-00001): ${'a'.repeat(114)} (#34)`),
+    null,
+  );
+  assert.notEqual(
+    validateSubject(`doc(rent-00001): ${'a'.repeat(115)} (#34)`),
+    null,
+  );
 });

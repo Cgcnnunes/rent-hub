@@ -4,9 +4,6 @@ export interface HealthResponse {
   };
 }
 
-export interface ErrorResponse {
-  error: {
-    code: 'INTERNAL_ERROR' | 'NOT_FOUND';
-    message: string;
-  };
+export function healthResponse(): HealthResponse {
+  return { data: { status: 'ok' } };
 }

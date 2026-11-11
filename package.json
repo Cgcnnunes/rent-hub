@@ -12,23 +12,29 @@
   },
   "scripts": {
     "build": "nx run-many -t build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings=0",
+    "prepare": "husky",
     "test": "nx run-many -t test",
+    "test:e2e": "nx run web:test-e2e",
     "test:graph": "node --test scripts/affected-graph.test.cjs",
     "typecheck": "nx run-many -t typecheck"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@eslint/js": "^9.39.5",
+    "@playwright/test": "^1.65.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "esbuild": "^0.28.2",
-    "miniflare": "5.20261110.1-beta",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.4.6",
+    "husky": "^9.1.7",
     "nx": "^24.0.6",
+    "prettier": "^3.10.0",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2",
     "vitest": "^5.1.0"
-  },
-  "overrides": {
-    "miniflare": {
-      "undici": "7.30.2"
-    }
   }
 }

@@ -4,7 +4,9 @@ const { execFileSync } = require('node:child_process');
 const { readFileSync } = require('node:fs');
 
 function validateSubject(subject) {
-  const match = /^(feat|chore|refactor|fix|doc)\(rent-[0-9]{5}\): (.+)$/u.exec(subject);
+  const match = /^(feat|chore|refactor|fix|doc)\(rent-[0-9]{5}\): (.+)$/u.exec(
+    subject,
+  );
 
   if (!match) {
     return 'expected type(rent-xxxxx): lowercase description';
@@ -24,7 +26,11 @@ function validateSubject(subject) {
 }
 
 function validatePullRequest(event) {
-  if (!event.pull_request || !Number.isSafeInteger(event.number) || event.number < 1) {
+  if (
+    !event.pull_request ||
+    !Number.isSafeInteger(event.number) ||
+    event.number < 1
+  ) {
     throw new Error('Expected a pull request event with a valid PR number.');
   }
 
@@ -41,9 +47,13 @@ function validatePullRequest(event) {
     errors.push(`PR title (including the squash suffix): ${squashTitleError}`);
   }
 
-  const revisions = execFileSync('git', ['rev-list', `${base.sha}..${head.sha}`], {
-    encoding: 'utf8',
-  }).trim();
+  const revisions = execFileSync(
+    'git',
+    ['rev-list', `${base.sha}..${head.sha}`],
+    {
+      encoding: 'utf8',
+    },
+  ).trim();
 
   if (!revisions) {
     throw new Error('No commits found between the pull request base and head.');
@@ -69,7 +79,9 @@ if (require.main === module) {
       throw new Error('GITHUB_EVENT_PATH is required.');
     }
 
-    const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+    const event = JSON.parse(
+      readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'),
+    );
     const errors = validatePullRequest(event);
 
     if (errors.length) {
@@ -79,7 +91,9 @@ if (require.main === module) {
 
       process.exitCode = 1;
     } else {
-      console.log('PR title and commit subjects match the documented convention.');
+      console.log(
+        'PR title and commit subjects match the documented convention.',
+      );
     }
   } catch (error) {
     console.error(`::error::Commit validation failed: ${error.message}`);

@@ -1,0 +1,11 @@
+node_modules
+package-lock.json
+dist
+coverage
+.next
+.nx
+*.tsbuildinfo
+apps/web/next-env.d.ts
+playwright-report
+test-results
+docs/ui-concept.html

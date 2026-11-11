@@ -60,15 +60,21 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        env:
+          HUSKY: 0
 
-      - name: Check types
-        run: npm run typecheck
+      - name: Check formatting and repository tooling
+        run: |
+          npm run format:check
+          npm run lint
+          npm run test:graph
+          node --test scripts/hooks.test.cjs
 
-      - name: Run unit and runtime tests
-        run: npm test
+      - name: Install Chromium for browser tests
+        run: npx playwright install --with-deps chromium
 
-      - name: Verify affected project selection
-        run: npm run test:graph
-
-      - name: Build workspace
-        run: npm run build
+      - name: Run affected quality checks
+        env:
+          NX_BASE: ${{ github.event.pull_request.base.sha }}
+          NX_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: npx nx affected -t lint typecheck test build test-e2e --output-style=static

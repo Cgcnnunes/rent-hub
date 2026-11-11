@@ -3,6 +3,7 @@
   "sourceRoot": "packages/contracts/src",
   "targets": {
     "build": { "command": "tsc -p packages/contracts/tsconfig.json" },
+    "lint": { "command": "eslint packages/contracts --max-warnings=0" },
     "typecheck": { "command": "tsc -p packages/contracts/tsconfig.json" }
   }
 }

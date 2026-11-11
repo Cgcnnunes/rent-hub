@@ -1,6 +1,6 @@
 # Testing Strategy
 
-Testing is part of the architecture and must accompany each feature. The workspace runs `npm test` for API unit tests, real Node HTTP tests, and Miniflare workerd tests, and `npm run test:graph` for Nx affected-project selection; `npm run typecheck` and `npm run build` run their available Nx targets. PR validation runs these checks. See the [development workflow](DEVELOPMENT.md) for setup and commands. This does not yet provide the complete coverage described below or lint and format checks.
+Testing is part of the architecture and must accompany each feature. The workspace runs `npm test` for API handler tests, `npm run test:graph` for Nx affected-project and target selection, and `npm run test:e2e` for a Chromium smoke test. PR validation checks formatting, lint, affected types, tests and builds. See the [development workflow](DEVELOPMENT.md) for setup and commands. These checks do not yet provide the complete coverage described below or actual Worker runtime verification.
 
 ## Test levels
 
