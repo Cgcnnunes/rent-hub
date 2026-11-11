@@ -25,6 +25,8 @@ older run; runs for different PRs do not share that concurrency group.
   no build artifacts are uploaded.
 - Jobs use Node 24.22.3, `npm ci`, and an npm download cache keyed by the
   lockfile. They do not persist `node_modules` or Nx's local task cache.
+- Checkout and Node setup use the Node 24-based `actions/checkout@v6` and
+  `actions/setup-node@v6` actions.
 
 ## Flow
 
