@@ -1,6 +1,6 @@
 # Testing Strategy
 
-Testing is part of the architecture and must accompany each feature. The workspace runs `npm test` for API handler and Node/Workerd runtime tests, `npm run test:graph` for Nx affected-project and target selection, and `npm run test:e2e` for a Chromium smoke test. PR validation runs full targets for affected apps and shared projects, with changed-file formatting checks and independent repository safeguards. See the [development workflow](DEVELOPMENT.md) for setup, caching, and commands. These checks do not yet provide the complete coverage described below or deployed Worker verification.
+Testing is part of the architecture and must accompany each feature. The workspace runs `npm test` for API handler, SQLite migration, Node/Workerd runtime, and local D1 schema tests, `npm run test:graph` for Nx affected-project and target selection, and `npm run test:e2e` for a Chromium smoke test. PR validation runs full targets for affected apps and shared projects, with changed-file formatting checks and independent repository safeguards. Migration tests use in-memory SQLite and an isolated Miniflare D1 instance, not PROD. See the [development workflow](DEVELOPMENT.md) for setup, caching, and commands. These checks do not yet provide the complete coverage described below or deployed Worker verification.
 
 ## Test levels
 

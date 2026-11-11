@@ -16,8 +16,9 @@ apps/web/next-env.d.ts
 .turbo/
 .cache/
 
-# Local Cloudflare state
+# Local data and Cloudflare state
 .wrangler/
+apps/api/.local/
 
 # Local environment and secrets
 .env

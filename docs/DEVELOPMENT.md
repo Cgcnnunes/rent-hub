@@ -4,7 +4,7 @@
 
 The foundation is in progress. The initial web page and API health endpoint are scaffolding, not business features. The API build currently type-checks only; it is not a deployable artifact.
 
-The API has a local Node server and a Worker entry tested in Workerd. Local data services and a Next.js-on-Workers prototype remain to be implemented and verified.
+The API has a local Node server, a Worker entry tested in Workerd, and an isolated local SQLite migration command. The API does not yet use the database. Local test data and other services, and a Next.js-on-Workers prototype, remain to be implemented and verified.
 
 `npm audit` currently reports a moderate-severity development dependency advisory in the Nx and TypeScript ESLint minimatch chains; production dependencies reported no advisories during this validation. Track and re-evaluate the advisory before considering the foundation complete.
 
@@ -24,9 +24,11 @@ npm run test:e2e
 npm run build
 ```
 
-`npm test` runs the API unit, local Node HTTP, and Workerd integration tests. `npm run test:graph` checks Nx affected project and target selection for isolated web and API changes and for each shared package. `npm run test:e2e` starts the web app and runs a Chromium smoke test. `npm run build` builds the web app and type-checks the remaining projects; it does not produce an API deployment artifact. PR validation selects affected projects from the PR base and head, checks each affected app in a parallel matrix, and checks affected shared projects separately. Each selected project's lint, type, unit-test, and build targets run on the whole project, not just changed files; affected apps with a browser target also run it. Formatting normally checks changed files; changes to formatting configuration or dependency manifests trigger a workspace-wide check. Root tooling and metadata checks run independently. The hand-maintained UI concept HTML is excluded from automatic formatting.
+`npm test` runs the API unit, local SQLite migration, Node HTTP, and Workerd/D1 integration tests. `npm run test:graph` checks Nx affected project and target selection for isolated web and API changes and for each shared package. `npm run test:e2e` starts the web app and runs a Chromium smoke test. `npm run build` builds the web app and type-checks the remaining projects; it does not produce an API deployment artifact. PR validation selects affected projects from the PR base and head, checks each affected app in a parallel matrix, and checks affected shared projects separately. Each selected project's lint, type, unit-test, and build targets run on the whole project, not just changed files; affected apps with a browser target also run it. Formatting normally checks changed files; changes to formatting configuration or dependency manifests trigger a workspace-wide check. Root tooling and metadata checks run independently. The hand-maintained UI concept HTML is excluded from automatic formatting.
 
 To run the scaffold web page locally, execute `npm run dev --workspace @rent-hub/web` from the repository root and visit `http://localhost:3000`. To run the API, use `npm run dev --workspace @rent-hub/api` and visit `http://127.0.0.1:8787/api/v1/health`. Stop either server with Ctrl+C. These commands do not require environment variables or production credentials.
+
+Run `npm run db:migrate --workspace @rent-hub/api` from the repository root to create or update the SQLite database at `apps/api/.local/rent-hub.sqlite`. The command accepts no path or arguments, uses no provider credentials, and does not access D1 or PROD. It fails on symbolic-link database paths, migration errors, or modified/removed/reordered applied migrations; do not edit an applied migration. Node may print an experimental SQLite warning. The ignored database contains no seed data and is not connected to the API yet. Do not copy production data into it.
 
 Next.js automatic agent-rule file generation is disabled so starting the web server does not modify the working tree; follow the repository's `AGENTS.md` and the installed Next.js documentation when working on the web app.
 
@@ -50,7 +52,7 @@ The remaining foundation work includes:
 
 - Deployment workflows and Nx project/task configuration for affected deployments.
 - Runtime validation for future provider bindings and API features beyond health.
-- Local database, migrations, and test data that do not use PROD resources.
+- Remaining feature migrations, database adapters, local services, and synthetic test data that do not use PROD resources.
 
 ## Branch and pull request workflow
 
