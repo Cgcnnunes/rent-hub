@@ -7,7 +7,8 @@
       "{workspaceRoot}/nx.json",
       "{workspaceRoot}/package.json",
       "{workspaceRoot}/package-lock.json",
-      "{workspaceRoot}/tsconfig.base.json"
+      "{workspaceRoot}/tsconfig.base.json",
+      "{workspaceRoot}/scripts/build-api.mjs"
     ]
   },
   "targetDefaults": {

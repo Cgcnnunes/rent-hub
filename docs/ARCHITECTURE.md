@@ -24,6 +24,14 @@ The Node.js and Cloudflare Worker entry points must call the same application be
 
 Maintain a current record of each material Node.js/Workers incompatibility, the affected capability, its workaround or adapter, and remaining limitations. Validate compatibility in the actual Worker runtime; do not silently compromise required behavior.
 
+### Current runtime compatibility
+
+| Capability | Difference and approach | Validation and remaining limitations |
+|---|---|---|
+| HTTP transport | Node HTTP messages are translated to Web `Request`/`Response` by the Node adapter; Workers invoke the same handler directly. | A real local Node HTTP server and Miniflare's workerd runtime exercise health and unknown routes. Other request bodies, cancellation, multi-value response headers, authentication, and deployed networking need feature-specific verification before use. |
+| Bundling | Node and Worker entry points are separately bundled; Node built-ins remain confined to the Node entry point. | Worker tests bundle without Node compatibility flags and execute in workerd. Only the health boundary is currently covered; no deployed Cloudflare resource or Next.js adapter has been validated. |
+| Logging | A small application port uses console methods available in both runtimes. Only stable event names and the local listening port are logged. | Error responses and error logs omit request content and exception details. Cloudflare log collection and production observability are not configured. |
+
 ## Technology decisions
 
 | Concern | Decision |

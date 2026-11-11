@@ -2,7 +2,10 @@
   "name": "api",
   "sourceRoot": "apps/api/src",
   "targets": {
-    "build": { "command": "tsc -p apps/api/tsconfig.json" },
+    "build": {
+      "command": "tsc -p apps/api/tsconfig.json && node scripts/build-api.mjs",
+      "outputs": ["{workspaceRoot}/dist/apps/api"]
+    },
     "typecheck": { "command": "tsc -p apps/api/tsconfig.json" },
     "test": { "command": "vitest run apps/api/src" }
   }

@@ -52,5 +52,23 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: git diff --check "$BASE_SHA...$HEAD_SHA"
 
-      - name: Report current validation scope
-        run: echo "::notice::This bootstrap check does not run workspace lint, format, type, test, or build tasks. Add authoritative Nx quality checks in the foundation."
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.2
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check types
+        run: npm run typecheck
+
+      - name: Run unit and runtime tests
+        run: npm test
+
+      - name: Verify affected project selection
+        run: npm run test:graph
+
+      - name: Build workspace
+        run: npm run build

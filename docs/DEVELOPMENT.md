@@ -2,11 +2,13 @@
 
 ## Current status
 
-The foundation is in progress. The initial web page and API health handler are scaffolding, not business features. The API build currently type-checks only; it is not a deployable artifact.
+The foundation is in progress. The initial web page and API health endpoint are scaffolding, not business features.
 
-Node API serving, actual Worker runtime tests, local data services, lint/format and hooks, CI quality gates, and a Next.js-on-Workers prototype remain to be implemented and verified.
+Node API serving and local Worker runtime tests are available. Local data services, lint/format and hooks, complete CI quality gates, and a Next.js-on-Workers prototype remain to be implemented and verified.
 
 `npm audit` currently reports a moderate-severity development dependency advisory in the Nx/minimatch chain; production dependencies reported no advisories during this validation. Track and re-evaluate the advisory before considering the foundation complete.
+
+The Worker test harness currently pins Miniflare 5 beta to avoid known high-severity advisories in the latest stable Miniflare's image dependency. Its pinned Undici dependency is overridden to a patched 7.x release. Re-evaluate the beta and override when an audited stable release is available; these dependencies are used for development and tests, not included in the API bundles.
 
 ## Local setup and commands
 
@@ -20,16 +22,16 @@ npm run test:graph
 npm run build
 ```
 
-`npm test` runs the available API handler tests. `npm run test:graph` checks Nx affected selection for isolated web and API changes and for each shared package. `npm run build` builds the web app and type-checks the remaining projects; it does not produce an API server or deployment artifact. CI does not yet run these commands.
+`npm test` runs the API unit, Node HTTP integration, and workerd tests. `npm run test:graph` checks Nx affected selection for isolated web and API changes and for each shared package. `npm run build` builds the web app, emits Node and Worker API bundles under `dist/apps/api`, and type-checks the remaining projects. PR validation runs these commands and type checking; lint and format checks remain outstanding.
 
-To run the scaffold web page locally, execute `npm run dev --workspace @rent-hub/web` from the repository root and visit `http://localhost:3000`. Stop the server with Ctrl+C. There is no local API server yet, and no environment variables or production credentials are required for these commands.
+To run the scaffold web page locally, execute `npm run dev --workspace @rent-hub/web` from the repository root and visit `http://localhost:3000`. To run the API, first build it with `npx nx run api:build`, then run `node dist/apps/api/node.mjs` and visit `http://127.0.0.1:3001/api/v1/health`. `PORT` optionally selects an integer port from 1 to 65535. Stop either server with Ctrl+C. No production credentials are required.
 
 Next.js automatic agent-rule file generation is disabled so starting the web server does not modify the working tree; follow the repository's `AGENTS.md` and the installed Next.js documentation when working on the web app.
 
 ## Workspace layout
 
 - `apps/web`: Next.js client; depends on `packages/localization`.
-- `apps/api`: Web Request/Response health handler and Worker-shaped entry; depends on `packages/contracts`.
+- `apps/api`: application health use case, Web Request/Response boundary, logging adapter, and Node/Worker entry points; depends on `packages/contracts`.
 - `packages/contracts`: initial health response contract used by the API.
 - `packages/localization`: initial Portuguese UI messages used by the web app.
 - `scripts`: bootstrap PR validation and affected-graph verification.
@@ -45,7 +47,7 @@ The first implementation phase should add:
 - ESLint and Prettier configuration.
 - Vitest and Playwright configuration appropriate to the applications.
 - Husky hooks and Commitlint.
-- Local Node.js and Cloudflare-compatible development adapters.
+- Full local Cloudflare-compatible data and storage adapters.
 - Local database, migrations, and test data that do not use PROD resources.
 
 ## Branch and pull request workflow
@@ -72,7 +74,7 @@ Allowed commit types are `feat`, `chore`, `refactor`, `fix`, and `doc`. The lowe
 
 PR validation remains the authoritative quality gate. The precise commands will be documented when the workspace and hooks are implemented.
 
-The bootstrap PR workflow validates each PR commit subject and the PR title, including the GitHub squash suffix. It uses `node --test scripts/validate-commit-messages.test.cjs` to test the validator. A PR check cannot validate edits made to the squash message at merge time. A GitHub-side commit metadata restriction was rejected by the current repository configuration, so the person merging must check the final subject. The existing administrator bypass also remains in place.
+The PR workflow validates each PR commit subject and the PR title, including the GitHub squash suffix. It uses `node --test scripts/validate-commit-messages.test.cjs` to test the validator, installs dependencies, and runs the current type, test, affected-graph, and build checks. A PR check cannot validate edits made to the squash message at merge time. A GitHub-side commit metadata restriction was rejected by the current repository configuration, so the person merging must check the final subject. The existing administrator bypass also remains in place.
 
 ## Code conventions
 
