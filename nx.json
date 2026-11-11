@@ -6,6 +6,7 @@
     "sharedGlobals": [
       "{workspaceRoot}/nx.json",
       "{workspaceRoot}/eslint.config.mjs",
+      "{workspaceRoot}/playwright.config.ts",
       "{workspaceRoot}/package.json",
       "{workspaceRoot}/package-lock.json",
       "{workspaceRoot}/tsconfig.base.json",

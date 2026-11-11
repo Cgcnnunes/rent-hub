@@ -30,7 +30,7 @@ The active `Protect main` ruleset currently:
 
 GitHub is configured to allow only squash merges, using the PR title as the default squash subject. The merger must ensure the final subject still follows the convention: PR validation cannot check edits made at merge time. A server-side commit metadata restriction was rejected by the current repository configuration.
 
-The `execute-pr-validation.yml` workflow checks the PR release selection, commit subjects, PR title, patch whitespace, formatting, lint, and affected Nx types, tests, and builds. The PR title must leave space for GitHub's ` (#number)` suffix within the description's 120-character limit.
+The `execute-pr-validation.yml` workflow checks the PR release selection, commit subjects, PR title, patch whitespace, formatting, repository tooling, and affected project lint, types, tests, and builds. Affected apps run in parallel; affected shared projects have a separate check. The PR title must leave space for GitHub's ` (#number)` suffix within the description's 120-character limit.
 
 ## Checks
 

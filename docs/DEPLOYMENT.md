@@ -4,7 +4,7 @@
 
 No application deployment workflows or Cloudflare resources have been created yet. This document defines the intended behavior; it is not evidence that deployments are available.
 
-The GitHub `main` ruleset requires a pull request, one approval, and the `PR validation` status check; it blocks direct pushes, deletions, and force pushes, and allows repository admins to bypass. The `execute-pr-validation.yml` workflow checks release selection, PR commit subjects and title, patch whitespace, formatting and lint; it runs affected Nx type checks, tests and builds against the PR base and head.
+The GitHub `main` ruleset requires a pull request, one approval, and the `PR validation` status check; it blocks direct pushes, deletions, and force pushes, and allows repository admins to bypass. The `execute-pr-validation.yml` workflow checks release selection, PR commit subjects and title, patch whitespace, formatting and root tooling; it runs lint, type checks, tests and builds for affected apps and shared projects against the PR base and head. The required check aggregates all applicable jobs.
 
 ## Environments
 

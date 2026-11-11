@@ -131,6 +131,8 @@ commit the work you intend to push before relying on affected selection.
 | [`scripts/hooks.test.ts`](../scripts/hooks.test.ts)                                       | Tests branch restrictions and Git's staged whitespace/conflict checks.                                                           |
 | [`scripts/validate-commit-messages.test.ts`](../scripts/validate-commit-messages.test.ts) | Runs Commitlint against valid and invalid examples, including the squash-title length limit.                                     |
 | [`scripts/affected-graph.test.ts`](../scripts/affected-graph.test.ts)                     | Checks that Nx selects expected projects and targets for web, API, and shared-package changes. Run it with `npm run test:graph`. |
+| [`scripts/ci-projects.ts`](../scripts/ci-projects.ts)                                     | Uses Nx's affected-project graph to select the PR app matrix and shared-project checks.                                          |
+| [`scripts/ci-projects.test.ts`](../scripts/ci-projects.test.ts)                           | Tests how the PR workflow separates affected apps and shared projects.                                                           |
 | [`scripts/tsconfig.json`](../scripts/tsconfig.json)                                       | Configures type-checking for the scripts and Commitlint config.                                                                  |
 | [`scripts/package.json`](../scripts/package.json)                                         | Marks the scripts directory as ES modules so Node can run its TypeScript files.                                                  |
 

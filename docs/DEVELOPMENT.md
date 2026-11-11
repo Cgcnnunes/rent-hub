@@ -24,7 +24,7 @@ npm run test:e2e
 npm run build
 ```
 
-`npm test` runs the available API handler tests. `npm run test:graph` checks Nx affected project and target selection for isolated web and API changes and for each shared package. `npm run test:e2e` starts the web app and runs a Chromium smoke test. `npm run build` builds the web app and type-checks the remaining projects; it does not produce an API server or deployment artifact. PR validation checks repository-wide formatting and linting, and runs affected lint, type, unit, browser, and build targets using the PR base and head. The hand-maintained UI concept HTML is excluded from automatic formatting.
+`npm test` runs the available API handler tests. `npm run test:graph` checks Nx affected project and target selection for isolated web and API changes and for each shared package. `npm run test:e2e` starts the web app and runs a Chromium smoke test. `npm run build` builds the web app and type-checks the remaining projects; it does not produce an API server or deployment artifact. PR validation selects affected projects from the PR base and head, checks each affected app in a parallel matrix, and checks affected shared projects separately. Each selected project's lint, type, unit-test, and build targets run on the whole project, not just changed files; affected apps with a browser target also run it. Formatting normally checks changed files; changes to formatting configuration or dependency manifests trigger a workspace-wide check. Root tooling and metadata checks run independently. The hand-maintained UI concept HTML is excluded from automatic formatting.
 
 To run the scaffold web page locally, execute `npm run dev --workspace @rent-hub/web` from the repository root and visit `http://localhost:3000`. Stop the server with Ctrl+C. There is no local API server yet, and no environment variables or production credentials are required for these commands.
 
@@ -39,6 +39,8 @@ Next.js automatic agent-rule file generation is disabled so starting the web ser
 - `scripts`: PR and hook validation, and affected-graph verification.
 
 Nx models each shared package's actual consumers. Neither existing package is currently consumed by both apps; cross-app shared-package selection will need verification when such a dependency exists. Type checks, lint, and unit tests use Nx caching with declared workspace and runtime inputs; the Next.js build and browser test are not cached because their environment-dependent behavior has not been fully modeled.
+
+GitHub Actions caches npm's download cache using the lockfile through `setup-node`; every job still runs `npm ci` to install dependencies. It does not cache `node_modules` or persist Nx's local task cache between runners. Nx affected selection decides which projects need validation; its task cache is separate and can reuse matching deterministic results where a cache is available. Remote or persistent CI task caching is not configured.
 
 ## Planned foundation
 

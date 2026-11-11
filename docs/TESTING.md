@@ -1,6 +1,6 @@
 # Testing Strategy
 
-Testing is part of the architecture and must accompany each feature. The workspace runs `npm test` for API handler tests, `npm run test:graph` for Nx affected-project and target selection, and `npm run test:e2e` for a Chromium smoke test. PR validation checks formatting, lint, affected types, tests and builds. See the [development workflow](DEVELOPMENT.md) for setup and commands. These checks do not yet provide the complete coverage described below or actual Worker runtime verification.
+Testing is part of the architecture and must accompany each feature. The workspace runs `npm test` for API handler tests, `npm run test:graph` for Nx affected-project and target selection, and `npm run test:e2e` for a Chromium smoke test. PR validation runs full targets for affected apps and shared projects, with changed-file formatting checks and independent repository safeguards. See the [development workflow](DEVELOPMENT.md) for setup, caching, and commands. These checks do not yet provide the complete coverage described below or actual Worker runtime verification.
 
 ## Test levels
 
