@@ -2,7 +2,11 @@
 
 ## Current status
 
-The repository currently contains documentation and Git initialization only. Application packages, dependency manifests, and runnable commands have not been created. Do not treat example or planned commands as available until the repository foundation defines them.
+The foundation is in progress. Node.js 22.22.2 and npm 10.9.7 were used to validate the initial workspace. From a clean checkout, run `npm ci`, then `npm run typecheck`, `npm test`, and `npm run build`. The initial web page and API health handler are scaffolding, not business features. The API build currently type-checks only; it is not a deployable artifact.
+
+The workspace contains `apps/web`, `apps/api`, `packages/contracts`, and `packages/localization`. Nx models their current workspace dependencies; verification of a genuinely shared change affecting both apps remains outstanding. Node API serving, actual Worker runtime tests, local data services, lint/format and hooks, CI quality gates, and a Next.js-on-Workers prototype remain to be implemented and verified.
+
+`npm audit` currently reports a moderate-severity development dependency advisory in the Nx/minimatch chain; production dependencies reported no advisories during this validation. Track and re-evaluate the advisory before considering the foundation complete.
 
 ## Planned foundation
 

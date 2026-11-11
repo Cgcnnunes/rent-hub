@@ -1,0 +1,8 @@
+{
+  "name": "contracts",
+  "sourceRoot": "packages/contracts/src",
+  "targets": {
+    "build": { "command": "tsc -p packages/contracts/tsconfig.json" },
+    "typecheck": { "command": "tsc -p packages/contracts/tsconfig.json" }
+  }
+}

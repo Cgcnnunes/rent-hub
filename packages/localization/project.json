@@ -1,0 +1,8 @@
+{
+  "name": "localization",
+  "sourceRoot": "packages/localization/src",
+  "targets": {
+    "build": { "command": "tsc -p packages/localization/tsconfig.json" },
+    "typecheck": { "command": "tsc -p packages/localization/tsconfig.json" }
+  }
+}

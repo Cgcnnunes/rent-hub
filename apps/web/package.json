@@ -1,0 +1,8 @@
+{
+  "name": "@rent-hub/web",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@rent-hub/localization": "0.0.0"
+  }
+}

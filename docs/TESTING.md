@@ -1,6 +1,6 @@
 # Testing Strategy
 
-Testing is part of the architecture and must accompany each feature. Exact commands and CI task names will be added when the npm/Nx workspace is implemented.
+Testing is part of the architecture and must accompany each feature. The initial workspace runs `npm test` for API handler tests; `npm run typecheck` and `npm run build` run their available Nx targets. These do not yet provide the complete coverage described below, actual Worker runtime verification, or authoritative application-quality CI.
 
 ## Test levels
 
