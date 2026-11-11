@@ -1,17 +1,34 @@
+import { execFileSync } from 'node:child_process';
+
 import type { UserConfig } from '@commitlint/types';
 import { RuleConfigSeverity } from '@commitlint/types';
+
+const branch =
+  process.env.COMMIT_BRANCH ??
+  execFileSync('git', ['symbolic-ref', '--quiet', '--short', 'HEAD'], {
+    encoding: 'utf8',
+  }).trim();
+const expectedScope = /^rent-\d{5}$/u.test(branch)
+  ? branch.toUpperCase()
+  : null;
 
 const config: UserConfig = {
   defaultIgnores: false,
   parserPreset: {
     parserOpts: {
-      headerPattern: /^([a-z]+)\((rent-[0-9]{5})\): (.+)$/u,
+      headerPattern: /^([a-z]+)\((RENT-[0-9]{5})\): (.+)$/u,
       headerCorrespondence: ['type', 'scope', 'subject'],
     },
   },
   plugins: [
     {
       rules: {
+        'branch-scope': ({ scope }) => [
+          Boolean(expectedScope && scope === expectedScope),
+          expectedScope
+            ? `scope must match the feature branch: ${expectedScope}`
+            : 'feature branch must have the format rent-xxxxx',
+        ],
         'description-lowercase': ({ subject }) => {
           if (!subject) return [true];
           return [
@@ -34,6 +51,7 @@ const config: UserConfig = {
     },
   ],
   rules: {
+    'branch-scope': [RuleConfigSeverity.Error, 'always'],
     'description-length': [RuleConfigSeverity.Error, 'always'],
     'description-lowercase': [RuleConfigSeverity.Error, 'always'],
     'description-not-blank': [RuleConfigSeverity.Error, 'always'],

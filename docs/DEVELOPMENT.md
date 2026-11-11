@@ -57,12 +57,12 @@ The remaining foundation work includes:
 3. Implement the change in the correct application/package and add tests.
 4. Update affected docs and the glossary.
 5. Run relevant local checks and verify runtime compatibility where applicable.
-6. Commit as `type(rent-xxxxx): concise lowercase description`.
+6. Commit as `type(RENT-xxxxx): concise lowercase description`, using the branch's five-digit number.
 7. Open a pull request to `main`, selecting exactly one of Major, Minor, or Patch. Its title must follow the commit format and leave room for GitHub's ` (#number)` suffix within the 120-character description limit.
 8. Pass PR validation and obtain one approval.
 9. Squash and merge using a correctly formatted commit subject; merged changes are then considered for TEST deployment. Do not edit the final squash subject to bypass the convention.
 
-The commit sequence is separate from the feature-branch sequence. A collision-safe assignment mechanism is unresolved; do not assume the branch number is the commit number or enforce a race-prone local counter.
+For example, `rent-00007` uses the scope `RENT-00007` for every commit and the PR title. Feature-branch number allocation is not automated.
 
 Allowed commit types are `feat`, `chore`, `refactor`, `fix`, and `doc`. The lowercase description must not exceed 120 characters.
 
@@ -72,7 +72,7 @@ For a beginner-friendly explanation of each hook, command, and supporting
 script, see the [Git hooks guide](HOOKS.md).
 
 - **Pre-commit:** `git diff --cached --check` rejects whitespace errors and conflict markers; `node scripts/check-staged.ts` checks formatting for staged files and rejects partially staged files; `npm run lint` lints the workspace. Partially staged files must have their remaining changes staged or set aside first, so checks cannot validate a different version from the commit.
-- **Commit-msg:** Commitlint enforces the format, allowed type, lowercase description, and description length without allocating identifiers; PR validation uses the same Commitlint configuration.
+- **Commit-msg:** Commitlint enforces the format, matching uppercase branch scope, allowed type, lowercase description, and description length; PR validation uses the same rules against the PR head branch.
 - **Pre-push:** `node scripts/push-policy.ts` validates the branch refs; `git merge-base` selects the local `origin/main` base. `tsc` type-checks the scripts and `node --test` tests their policies; `nx affected` runs unit tests and type checks for affected projects, and `npm run build` builds the workspace. Generated build files remain ignored by Git. Fetch `origin/main` before pushing; browser tests run in PR validation rather than this hook.
 
 Husky installs the hooks during `npm ci`; PR validation remains authoritative. Local hooks do not access PROD resources.
@@ -83,7 +83,7 @@ The remaining scripts use TypeScript with Node 24's built-in type stripping, and
 
 - `check-staged.ts` selects staged files and verifies that the files checked match the versions being committed.
 - `push-policy.ts` validates each branch ref passed by Git and reports whether a branch needs checks.
-- `commitlint.config.ts` defines the subject rules used for commits and PR validation; the PR workflow adds the squash-title suffix before checking the title.
+- `commitlint.config.ts` defines the subject rules used for commits and PR validation; locally it reads the current branch, while CI supplies `COMMIT_BRANCH` from the PR head. The PR workflow adds the squash-title suffix before checking the title.
 - `ci-projects.ts` selects the app matrix and shared-project checks for PR validation.
 - `hooks.test.ts`, `validate-commit-messages.test.ts`, `affected-graph.test.ts`, and `ci-projects.test.ts` test hook policy, subject rules, and Nx selection.
 

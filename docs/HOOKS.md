@@ -27,13 +27,14 @@ For example:
 ```sh
 git status
 git add path/to/file
-git commit -m "fix(rent-00001): correct the example"
+git commit -m "fix(RENT-00001): correct the example"
 git fetch origin
 git push
 ```
 
-The identifier in the example is illustrative. The commit identifier sequence
-is separate from branch numbering; there is no automatic allocator.
+The example assumes the current branch is `rent-00001`. Every commit uses the
+same number as its branch, with an uppercase `RENT-` scope. There is no
+automatic allocator for branch numbers.
 
 ## Before a commit: `pre-commit`
 
@@ -80,14 +81,18 @@ that file, and `npx --no --` uses the locally installed tool without prompting
 to install it. The rules are defined in
 [`commitlint.config.ts`](../commitlint.config.ts):
 
-- Use `type(rent-xxxxx): description`, with exactly five digits.
+- Use `type(RENT-xxxxx): description`, with exactly five digits matching the
+  current `rent-xxxxx` branch.
 - The type must be `feat`, `chore`, `refactor`, `fix`, or `doc`.
 - The description must not be blank, must be lowercase, and can contain at
   most 120 characters.
 
-For example, `fix(rent-00001): correct the example` is valid, while
-`fix(rent-1): Correct the example` is not. Fix the message and retry if the
-hook reports an error.
+On branch `rent-00001`, `fix(RENT-00001): correct the example` is valid;
+`fix(RENT-00002): correct the example` and
+`fix(rent-00001): correct the example` are not. Fix the message and retry if
+the hook reports an error. Locally Commitlint reads the current branch;
+PR validation passes the PR's head branch through `COMMIT_BRANCH` because
+Actions checks out a detached commit.
 
 ## Before a push: `pre-push`
 

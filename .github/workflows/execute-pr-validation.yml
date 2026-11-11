@@ -60,6 +60,7 @@ jobs:
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          COMMIT_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           printf '%s (#%s)\n' "$PR_TITLE" "$PR_NUMBER" | npx commitlint
           test -n "$(git rev-list "$NX_BASE..$NX_HEAD")"

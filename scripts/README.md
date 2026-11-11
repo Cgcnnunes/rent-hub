@@ -168,13 +168,15 @@ validation also run it.
 
 ### Inputs and outputs
 
-Passes sample subjects to the installed Commitlint CLI using standard input;
-Node's test runner reports results. It does not change commits.
+Passes sample subjects to the installed Commitlint CLI using standard input
+and supplies `COMMIT_BRANCH` for each example; Node's test runner reports
+results. It does not change commits.
 
 ### Behavior
 
-Covers allowed types, invalid formats, lowercase descriptions, length limits,
-and GitHub's squash suffix, including Unicode examples.
+Covers allowed types, invalid formats, branch and uppercase scope matching,
+lowercase descriptions, length limits, and GitHub's squash suffix, including
+Unicode examples.
 
 ### Failure and verification
 

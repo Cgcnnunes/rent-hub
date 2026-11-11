@@ -9,12 +9,12 @@ This repository is in its planning and foundation phase. Follow this guide as im
 3. Implement the change in the appropriate application or package and add tests.
 4. Update related documentation and the glossary.
 5. Run the relevant local checks.
-6. Commit using `type(rent-xxxxx): concise lowercase description`.
+6. Commit using `type(RENT-xxxxx): concise lowercase description`, with the same five digits as the feature branch.
 7. Open a pull request targeting `main`, use the commit format for its title, and select exactly one release type: Major, Minor, or Patch.
 8. Pass PR validation and obtain one approval before merging.
 9. Squash and merge using a correctly formatted final commit subject.
 
-The commit identifier sequence is separate from feature-branch numbering. Its collision-safe allocation and validation mechanism must be decided before commit hooks enforce it.
+All commits and the PR title use the feature branch number; for example, branch `rent-00007` uses `feat(RENT-00007): description`. Feature-branch number allocation is not automated.
 
 Use `feat`, `chore`, `refactor`, `fix`, or `doc` as the commit type. The lowercase description must not exceed 120 characters. See the [development workflow](docs/DEVELOPMENT.md) for current hook responsibilities.
 

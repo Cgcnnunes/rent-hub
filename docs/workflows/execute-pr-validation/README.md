@@ -16,6 +16,8 @@ older run; runs for different PRs do not share that concurrency group.
 
 - Uses the PR base and head commit SHAs, title, number, and body. Exactly one
   Major, Minor, or Patch checkbox must be selected.
+- Supplies the lowercase PR head branch as `COMMIT_BRANCH` to Commitlint, so
+  every PR commit and title must use its matching uppercase `RENT-xxxxx` scope.
 - Reads repository contents and pull requests with read-only permissions. No
   secrets or deployment credentials are required by this workflow.
 - Discovery outputs JSON lists of affected apps and non-app projects to later
