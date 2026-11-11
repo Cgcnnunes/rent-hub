@@ -1,6 +1,6 @@
 # Project Guidelines
 
-This repository is currently a planning baseline. Do not describe planned behavior, commands, or infrastructure as implemented until the corresponding code and configuration exist.
+This repository is in the foundation phase. Do not describe planned behavior, commands, or infrastructure as implemented until the corresponding code and configuration exist.
 
 ## Before changing the project
 
@@ -27,4 +27,4 @@ This repository is currently a planning baseline. Do not describe planned behavi
 
 ## Current status
 
-There are no application build or test commands yet. Add and document them with the repository foundation rather than inventing commands in the meantime.
+An initial npm/Nx workspace exists; consult the development documentation for verified commands and outstanding foundation work.

@@ -1,0 +1,8 @@
+{
+  "name": "web",
+  "sourceRoot": "apps/web/app",
+  "targets": {
+    "build": { "command": "next build apps/web", "outputs": ["{projectRoot}/.next"] },
+    "typecheck": { "command": "tsc -p apps/web/tsconfig.json" }
+  }
+}

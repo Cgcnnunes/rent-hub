@@ -1,0 +1,9 @@
+{
+  "name": "@rent-hub/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@rent-hub/contracts": "0.0.0"
+  }
+}

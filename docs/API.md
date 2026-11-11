@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-This is the proposed HTTP contract for the first usable release. No API endpoints are implemented or tested yet. Routes and shared conventions below are design proposals to guide implementation; they are not a claim that a public API is available. Finalize field-level schemas and the open decisions at the end of this document with each feature before release.
+This is the proposed HTTP contract for the first usable release. The initial workspace includes a health handler; business API endpoints and production runtime deployment are not implemented. Routes and shared conventions below are design proposals to guide implementation; they are not a claim that a public API is available. Finalize field-level schemas and the open decisions at the end of this document with each feature before release.
 
 The API serves the modules in [Product Requirements](PRODUCT.md). It uses the native Web `Request` and `Response` APIs and has no HTTP framework, as specified in [Architecture](ARCHITECTURE.md).
 

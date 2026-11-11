@@ -10,6 +10,8 @@ test-results/
 
 # Framework and task-runner caches
 .next/
+*.tsbuildinfo
+apps/web/next-env.d.ts
 .nx/
 .turbo/
 .cache/

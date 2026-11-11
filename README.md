@@ -2,7 +2,7 @@
 
 Rent Hub is a property-management web application for landlords, initially focused on Portugal. It is intended to bring property, tenant, contract, payment, expense, maintenance, document, notification, and reporting workflows into one place.
 
-> **Project status:** planning and documentation baseline. Application features and deployment workflows have not been implemented yet.
+> **Project status:** foundation in progress. A minimal workspace and health handler exist; business features and deployment workflows have not been implemented yet.
 
 ## Initial product defaults
 
@@ -34,7 +34,7 @@ Rent Hub is a property-management web application for landlords, initially focus
 
 ## Repository status
 
-The [public GitHub repository](https://github.com/Cgcnnunes/rent-hub) is initialized on `main`. The product brief calls for an npm/Nx monorepo containing a Next.js web app, a portable TypeScript API, and reusable packages. Those application packages and their commands will be added in the repository-foundation phase.
+The [public GitHub repository](https://github.com/Cgcnnunes/rent-hub) uses an npm/Nx workspace with an initial Next.js page, API health handler, and shared packages. See [Development workflow](docs/DEVELOPMENT.md) for verified commands and remaining foundation work.
 
 ## Source use
 
