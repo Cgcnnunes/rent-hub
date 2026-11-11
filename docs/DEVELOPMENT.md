@@ -2,9 +2,9 @@
 
 ## Current status
 
-The foundation is in progress. The initial web page and API health handler are scaffolding, not business features. The API build currently type-checks only; it is not a deployable artifact.
+The foundation is in progress. The initial web page and API health endpoint are scaffolding, not business features. The API build currently type-checks only; it is not a deployable artifact.
 
-Node API serving, actual Worker runtime tests, local data services, and a Next.js-on-Workers prototype remain to be implemented and verified.
+The API has a local Node server and a Worker entry tested in Workerd. Local data services and a Next.js-on-Workers prototype remain to be implemented and verified.
 
 `npm audit` currently reports a moderate-severity development dependency advisory in the Nx and TypeScript ESLint minimatch chains; production dependencies reported no advisories during this validation. Track and re-evaluate the advisory before considering the foundation complete.
 
@@ -24,21 +24,23 @@ npm run test:e2e
 npm run build
 ```
 
-`npm test` runs the available API handler tests. `npm run test:graph` checks Nx affected project and target selection for isolated web and API changes and for each shared package. `npm run test:e2e` starts the web app and runs a Chromium smoke test. `npm run build` builds the web app and type-checks the remaining projects; it does not produce an API server or deployment artifact. PR validation selects affected projects from the PR base and head, checks each affected app in a parallel matrix, and checks affected shared projects separately. Each selected project's lint, type, unit-test, and build targets run on the whole project, not just changed files; affected apps with a browser target also run it. Formatting normally checks changed files; changes to formatting configuration or dependency manifests trigger a workspace-wide check. Root tooling and metadata checks run independently. The hand-maintained UI concept HTML is excluded from automatic formatting.
+`npm test` runs the API unit, local Node HTTP, and Workerd integration tests. `npm run test:graph` checks Nx affected project and target selection for isolated web and API changes and for each shared package. `npm run test:e2e` starts the web app and runs a Chromium smoke test. `npm run build` builds the web app and type-checks the remaining projects; it does not produce an API deployment artifact. PR validation selects affected projects from the PR base and head, checks each affected app in a parallel matrix, and checks affected shared projects separately. Each selected project's lint, type, unit-test, and build targets run on the whole project, not just changed files; affected apps with a browser target also run it. Formatting normally checks changed files; changes to formatting configuration or dependency manifests trigger a workspace-wide check. Root tooling and metadata checks run independently. The hand-maintained UI concept HTML is excluded from automatic formatting.
 
-To run the scaffold web page locally, execute `npm run dev --workspace @rent-hub/web` from the repository root and visit `http://localhost:3000`. Stop the server with Ctrl+C. There is no local API server yet, and no environment variables or production credentials are required for these commands.
+To run the scaffold web page locally, execute `npm run dev --workspace @rent-hub/web` from the repository root and visit `http://localhost:3000`. To run the API, use `npm run dev --workspace @rent-hub/api` and visit `http://127.0.0.1:8787/api/v1/health`. Stop either server with Ctrl+C. These commands do not require environment variables or production credentials.
 
 Next.js automatic agent-rule file generation is disabled so starting the web server does not modify the working tree; follow the repository's `AGENTS.md` and the installed Next.js documentation when working on the web app.
 
 ## Workspace layout
 
 - `apps/web`: Next.js client; depends on `packages/localization`.
-- `apps/api`: Web Request/Response health handler and Worker-shaped entry; depends on `packages/contracts`.
+- `apps/api`: application health use case, Web Request/Response boundary, Node HTTP and Worker entry points, and logging adapter; depends on `packages/contracts`.
 - `packages/contracts`: initial health response contract used by the API.
 - `packages/localization`: initial Portuguese UI messages used by the web app.
 - `scripts`: PR and hook validation, and affected-graph verification.
 
-Nx models each shared package's actual consumers. Neither existing package is currently consumed by both apps; cross-app shared-package selection will need verification when such a dependency exists. Type checks, lint, and unit tests use Nx caching with declared workspace and runtime inputs; the Next.js build and browser test are not cached because their environment-dependent behavior has not been fully modeled.
+Nx models each shared package's actual consumers. Neither existing package is currently consumed by both apps; cross-app shared-package selection will need verification when such a dependency exists. Type checks and lint use Nx caching with declared workspace and runtime inputs. API tests are not cached because they start local Node and Workerd runtimes; the Next.js build and browser test are not cached because their environment-dependent behavior has not been fully modeled.
+
+Miniflare is a development-only Workerd test harness; it does not connect to Cloudflare or deploy resources. The root overrides pin patched `sharp` and Miniflare's `undici` until Miniflare's pinned dependencies are updated. Re-evaluate the overrides when upgrading it.
 
 GitHub Actions caches npm's download cache using the lockfile through `setup-node`; every job still runs `npm ci` to install dependencies. It does not cache `node_modules` or persist Nx's local task cache between runners. Nx affected selection decides which projects need validation; its task cache is separate and can reuse matching deterministic results where a cache is available. Remote or persistent CI task caching is not configured.
 
@@ -47,7 +49,7 @@ GitHub Actions caches npm's download cache using the lockfile through `setup-nod
 The remaining foundation work includes:
 
 - Deployment workflows and Nx project/task configuration for affected deployments.
-- A local Node.js server and verified Cloudflare runtime adapters.
+- Runtime validation for future provider bindings and API features beyond health.
 - Local database, migrations, and test data that do not use PROD resources.
 
 ## Branch and pull request workflow

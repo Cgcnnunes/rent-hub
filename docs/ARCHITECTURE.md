@@ -24,6 +24,17 @@ The Node.js and Cloudflare Worker entry points must call the same application be
 
 Maintain a current record of each material Node.js/Workers incompatibility, the affected capability, its workaround or adapter, and remaining limitations. Validate compatibility in the actual Worker runtime; do not silently compromise required behavior.
 
+### Current runtime compatibility
+
+The health use case contains no HTTP or runtime dependencies. Both adapters invoke the same Web `Request`/`Response` handler. API tests exercise a real Node HTTP listener and Miniflare's local Workerd runtime (compatibility date `2026-07-30`); they do not prove compatibility in a deployed Worker.
+
+| Capability   | Difference and current handling                                                                                                            | Remaining limitation                                                                                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HTTP server  | Node uses `node:http` in a separate adapter; Workers supply Web requests to `fetch`.                                                       | The local server binds only to `127.0.0.1:8787` and constructs request URLs with `http://localhost` as the origin; do not depend on the original host or scheme.      |
+| Streams      | Node's stream types differ from DOM streams; the adapter bridges request bodies into a Web stream.                                         | The Node adapter buffers responses. It is not suitable for large file downloads or production traffic until streaming and resource limits are implemented and tested. |
+| Logging      | Both runtimes use a small logging port backed by `console`; failures emit fixed event names without request contents or exception details. | Structured context and deployed log retention remain to be designed; no routine health requests are logged.                                                           |
+| Dependencies | The Worker bundle contains only the shared health and HTTP boundary, not the Node adapter.                                                 | No other dependencies or provider bindings have been verified in Workers; test each new capability in Workerd and the deployed runtime.                               |
+
 ## Technology decisions
 
 | Concern               | Decision                                                                                 |

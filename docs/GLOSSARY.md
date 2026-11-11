@@ -17,5 +17,6 @@
 | PROD                 | Live production environment.                                                                                                               |
 | Synthetic user       | Controlled test identity that uses the normal authentication flow and is not an authentication bypass.                                     |
 | Affected app         | An app whose own inputs or dependent shared packages changed, as determined by the Nx project/task graph.                                  |
+| Workerd              | Cloudflare's Workers runtime, used locally through Miniflare to test Worker behavior.                                                      |
 | Pre-release          | GitHub release created after successful TEST deployment and verification, before PROD promotion.                                           |
 | Intentional rollback | An explicitly selected PROD deployment of an older tag previously deployed successfully to PROD, subject to database compatibility checks. |
