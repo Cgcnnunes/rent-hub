@@ -4,7 +4,7 @@
 
 No application deployment workflows or Cloudflare resources have been created yet. This document defines the intended behavior; it is not evidence that deployments are available.
 
-The GitHub `main` ruleset currently requires a pull request, one approval, and the `PR validation` status check; it blocks direct pushes, deletions, and force pushes, and allows repository admins to bypass. The `execute-pr-validation.yml` workflow currently checks release selection and patch whitespace. Nx app-quality tasks will be added when application packages exist.
+The GitHub `main` ruleset requires a pull request, one approval, and the `PR validation` status check; it blocks direct pushes, deletions, and force pushes, and allows repository admins to bypass. The `execute-pr-validation.yml` workflow checks release selection, PR commit subjects and title, and patch whitespace. Nx app-quality tasks will be added when application packages exist.
 
 ## Environments
 
@@ -46,6 +46,7 @@ Give workflows, jobs, and steps descriptive names. Separate jobs and logical ste
 - Scope concurrency to a pull request and cancel the older run for that same PR.
 - Run affected builds and relevant lint, format, type, unit, integration, and other required checks.
 - Reject a missing or multiple PR release-type selection.
+- Validate the PR title and each PR commit subject against the documented commit convention.
 
 ### `deploy-to-test.yml`
 

@@ -29,6 +29,7 @@ This log records choices gathered for the initial project baseline. Revisit deci
 | Deleted items | Account-scoped; Viewers can list records in their permitted areas, Editors can restore | Preserve area permissions during the recovery period |
 | Rollback | Explicitly redeploy an older, previously successful PROD release after checking database compatibility | Allow known-release recovery without treating it as a new release |
 | Release version | Apply the highest PR release type once to the latest created release or TEST pre-release | Produce a single next version for a release containing multiple PRs |
+| Merge method | Squash merges only, using the PR title as the default commit subject | Avoid automatically generated merge commits and keep one commit per PR |
 
 ## Pending validation or implementation choice
 

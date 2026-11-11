@@ -24,9 +24,9 @@ The first implementation phase should add:
 4. Update affected docs and the glossary.
 5. Run relevant local checks and verify runtime compatibility where applicable.
 6. Commit as `type(rent-xxxxx): concise lowercase description`.
-7. Open a pull request to `main`, selecting exactly one of Major, Minor, or Patch.
+7. Open a pull request to `main`, selecting exactly one of Major, Minor, or Patch. Its title must follow the commit format and leave room for GitHub's ` (#number)` suffix within the 120-character description limit.
 8. Pass PR validation and obtain one approval.
-9. Merge; merged changes are then considered for TEST deployment.
+9. Squash and merge using a correctly formatted commit subject; merged changes are then considered for TEST deployment. Do not edit the final squash subject to bypass the convention.
 
 The commit sequence is separate from the feature-branch sequence. A collision-safe assignment mechanism is unresolved; do not assume the branch number is the commit number or enforce a race-prone local counter.
 
@@ -39,6 +39,8 @@ Allowed commit types are `feat`, `chore`, `refactor`, `fix`, and `doc`. The lowe
 - **Pre-push:** reject direct pushes to `main` and feature branches that do not match `rent-xxxxx`; run relevant affected checks without PROD resources.
 
 PR validation remains the authoritative quality gate. The precise commands will be documented when the workspace and hooks are implemented.
+
+The bootstrap PR workflow validates each PR commit subject and the PR title, including the GitHub squash suffix. It uses `node --test scripts/validate-commit-messages.test.cjs` to test the validator. A PR check cannot validate edits made to the squash message at merge time. A GitHub-side commit metadata restriction was rejected by the current repository configuration, so the person merging must check the final subject. The existing administrator bypass also remains in place.
 
 ## Code conventions
 
