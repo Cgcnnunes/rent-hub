@@ -5,6 +5,7 @@
 | Account              | Container that owns a landlord's portfolio and its business records.                                                                       |
 | Account owner        | User who created/owns an account and may manage its members and access.                                                                    |
 | Member               | User who belongs to an account, either as its owner or by invitation. A user may belong to multiple accounts.                              |
+| Migration ledger     | Local database record of applied schema migrations and their checksums, used to detect changes to migration history.                       |
 | No access            | The member cannot use or view a specific application area.                                                                                 |
 | Viewer               | A member who can view records in an assigned area but cannot change them.                                                                  |
 | Editor               | A member who can view, add, change, and delete records in an assigned area.                                                                |

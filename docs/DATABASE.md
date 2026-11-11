@@ -2,7 +2,20 @@
 
 ## Status
 
-This is a conceptual model. Exact columns, keys, indexes, constraints, and migration files will be designed during implementation and reviewed against business rules.
+The first migration implements only users, accounts, memberships, and per-area access. The remaining entities and their fields, lifecycle rules, and migrations are conceptual and must be designed in reviewed feature slices. No API route currently reads or writes the database.
+
+## Implemented account slice
+
+[`0001_accounts.sql`](../apps/api/migrations/0001_accounts.sql) uses opaque text identifiers and UTC creation timestamps:
+
+- `users`: identifier and creation timestamp only. Credentials and profile fields await authentication design.
+- `accounts`: identifier and required owner user. A deferred foreign key requires that owner to have a membership in the same account.
+- `account_memberships`: composite account/user key, foreign keys to both records, and a user lookup index. A user can join multiple accounts.
+- `membership_area_access`: one access level per account, member, and nonempty area, constrained to `no_access`, `viewer`, or `editor`. The composite foreign key prevents granting access to a user who is not a member of that account.
+
+Create an account and its owner's membership in the same transaction. Foreign keys must be enabled for every SQLite connection. Deletions are restricted rather than cascaded; the unresolved retention and erasure rules must be decided before implementing removal. The schema alone does not enforce owner-only administration, interpret missing area entries, or create invitation defaults: authorization and invitation behavior remain future application work.
+
+Local migrations are applied by the Node SQLite adapter in a transaction, with a SHA-256 checksum ledger. Line endings are normalized before checksumming. Applied migrations must not be changed, removed, or reordered; add a new migration instead. Local SQLite and the first schema's constraints are tested, including in an isolated Miniflare D1 database. There is no remote D1 migration or deployment command yet. See [Development](DEVELOPMENT.md) for the local command.
 
 ## Initial entities
 
