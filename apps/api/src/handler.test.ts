@@ -5,7 +5,9 @@ import worker from './worker';
 
 describe('API boundary', () => {
   it('returns the shared health response', async () => {
-    const response = handleRequest(new Request('http://localhost/api/v1/health'));
+    const response = handleRequest(
+      new Request('http://localhost/api/v1/health'),
+    );
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ data: { status: 'ok' } });
   });
@@ -19,7 +21,9 @@ describe('API boundary', () => {
   });
 
   it('uses the same handler through the Worker entry', async () => {
-    const response = worker.fetch(new Request('http://localhost/api/v1/health'));
+    const response = worker.fetch(
+      new Request('http://localhost/api/v1/health'),
+    );
     expect(await response.json()).toEqual({ data: { status: 'ok' } });
   });
 });

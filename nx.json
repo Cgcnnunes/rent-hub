@@ -5,18 +5,27 @@
     "production": ["default", "!{projectRoot}/**/*.test.ts"],
     "sharedGlobals": [
       "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/eslint.config.mjs",
+      "{workspaceRoot}/playwright.config.ts",
       "{workspaceRoot}/package.json",
       "{workspaceRoot}/package-lock.json",
-      "{workspaceRoot}/tsconfig.base.json"
+      "{workspaceRoot}/tsconfig.base.json",
+      {
+        "runtime": "node -p \"process.version + '-' + process.platform + '-' + process.arch\""
+      }
     ]
   },
   "targetDefaults": {
     "build": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["default", "^production"]
     },
     "test": {
+      "cache": true,
+      "inputs": ["default", "^production"]
+    },
+    "lint": {
       "cache": true,
       "inputs": ["default", "^production"]
     },

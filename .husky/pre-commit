@@ -1,0 +1,7 @@
+set -e
+
+git diff --cached --check
+
+node scripts/check-staged.ts
+
+npm run lint

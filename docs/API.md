@@ -55,18 +55,18 @@ Errors use a stable machine-readable code and a safe message. `details` is optio
 
 Use the HTTP status that best describes the failure and keep error codes stable. At minimum, support:
 
-| Status | Meaning |
-|---|---|
-| `400` | Malformed request or invalid query parameters |
-| `401` | Missing, invalid, expired, or revoked authentication |
-| `403` | Authenticated user lacks the required area permission or owner authority |
-| `404` | Resource does not exist or is not visible in the selected account |
-| `409` | Conflict with current state or a business invariant, including conflicting signed contracts |
-| `413` | Request or uploaded file exceeds the configured limit |
-| `415` | Unsupported content type |
-| `422` | Well-formed input that fails field or business validation |
-| `429` | Rate limit exceeded |
-| `500` | Unexpected server failure, with no internal details in the response |
+| Status | Meaning                                                                                     |
+| ------ | ------------------------------------------------------------------------------------------- |
+| `400`  | Malformed request or invalid query parameters                                               |
+| `401`  | Missing, invalid, expired, or revoked authentication                                        |
+| `403`  | Authenticated user lacks the required area permission or owner authority                    |
+| `404`  | Resource does not exist or is not visible in the selected account                           |
+| `409`  | Conflict with current state or a business invariant, including conflicting signed contracts |
+| `413`  | Request or uploaded file exceeds the configured limit                                       |
+| `415`  | Unsupported content type                                                                    |
+| `422`  | Well-formed input that fails field or business validation                                   |
+| `429`  | Rate limit exceeded                                                                         |
+| `500`  | Unexpected server failure, with no internal details in the response                         |
 
 Validation errors should identify the relevant input field where safe. Never return credentials, token values, private storage keys, or another account's data in an error.
 
@@ -95,50 +95,50 @@ All paths below are relative to `/api/v1`. Unless an operation is explicitly pub
 
 ### Authentication and account access
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `POST /auth/register` | Register a user and create their owner account; initiate email verification | Public |
-| `POST /auth/email-verification/confirm` | Confirm an email verification challenge | Public |
-| `POST /auth/email-verification/resend` | Resend verification without disclosing whether an address is registered | Public |
-| `POST /auth/login` | Authenticate a verified user | Public |
-| `POST /auth/logout` | Revoke the current session or refresh credential | Authenticated |
-| `POST /auth/refresh` | Renew authentication under the selected token/session design | Authenticated or refresh credential |
-| `POST /auth/password-reset/request` | Start password recovery; response must not disclose account existence | Public |
-| `POST /auth/password-reset/confirm` | Set a new password using a valid recovery challenge | Public |
-| `GET /me` | Return the authenticated user's profile and account memberships | Authenticated |
-| `GET /accounts` | List accounts the authenticated user belongs to | Authenticated |
-| `POST /invitations/accept` | Accept an invitation using its challenge; follow the normal authentication and email-verification flow | Authenticated |
-| `GET /accounts/{accountId}/members` | List account members and their per-area access | Owner |
-| `POST /accounts/{accountId}/invitations` | Invite a user and set initial per-area access | Owner |
-| `POST /accounts/{accountId}/invitations/{invitationId}/resend` | Resend a pending invitation | Owner |
-| `DELETE /accounts/{accountId}/invitations/{invitationId}` | Revoke a pending invitation | Owner |
-| `PATCH /accounts/{accountId}/members/{userId}` | Change a member's per-area access | Owner |
-| `DELETE /accounts/{accountId}/members/{userId}` | Remove a member from the account | Owner |
+| Method and path                                                | Purpose                                                                                                | Access                              |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| `POST /auth/register`                                          | Register a user and create their owner account; initiate email verification                            | Public                              |
+| `POST /auth/email-verification/confirm`                        | Confirm an email verification challenge                                                                | Public                              |
+| `POST /auth/email-verification/resend`                         | Resend verification without disclosing whether an address is registered                                | Public                              |
+| `POST /auth/login`                                             | Authenticate a verified user                                                                           | Public                              |
+| `POST /auth/logout`                                            | Revoke the current session or refresh credential                                                       | Authenticated                       |
+| `POST /auth/refresh`                                           | Renew authentication under the selected token/session design                                           | Authenticated or refresh credential |
+| `POST /auth/password-reset/request`                            | Start password recovery; response must not disclose account existence                                  | Public                              |
+| `POST /auth/password-reset/confirm`                            | Set a new password using a valid recovery challenge                                                    | Public                              |
+| `GET /me`                                                      | Return the authenticated user's profile and account memberships                                        | Authenticated                       |
+| `GET /accounts`                                                | List accounts the authenticated user belongs to                                                        | Authenticated                       |
+| `POST /invitations/accept`                                     | Accept an invitation using its challenge; follow the normal authentication and email-verification flow | Authenticated                       |
+| `GET /accounts/{accountId}/members`                            | List account members and their per-area access                                                         | Owner                               |
+| `POST /accounts/{accountId}/invitations`                       | Invite a user and set initial per-area access                                                          | Owner                               |
+| `POST /accounts/{accountId}/invitations/{invitationId}/resend` | Resend a pending invitation                                                                            | Owner                               |
+| `DELETE /accounts/{accountId}/invitations/{invitationId}`      | Revoke a pending invitation                                                                            | Owner                               |
+| `PATCH /accounts/{accountId}/members/{userId}`                 | Change a member's per-area access                                                                      | Owner                               |
+| `DELETE /accounts/{accountId}/members/{userId}`                | Remove a member from the account                                                                       | Owner                               |
 
 Registration creates an account owned by the registering user. An unverified user cannot use business endpoints. Invitations default to Viewer for every business area, adjustable by the owner; member administration remains owner-only and document access retains associated-record checks. Invitation acceptance never bypasses registration, verification, or login requirements. Invitation expiry, duplicate invitations, ownership transfer, and last-owner behavior must be defined before implementation.
 
 ### Dashboard and portfolio
 
-| Method and path | Purpose | Access |
-|---|---|---|
+| Method and path                       | Purpose                                                                                                                         | Access                        |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
 | `GET /accounts/{accountId}/dashboard` | Return property and active-contract summaries, upcoming and overdue payments, recent activity, maintenance, and important dates | Viewer for each included area |
 
 The dashboard response must be permission-aware: omit data from areas the member cannot access and do not infer or reveal their records through aggregate counts. Upcoming rent uses the 90-day signed-commitment prediction described in [Product Requirements](PRODUCT.md#dashboard-prediction), clearly distinguishing estimates from recorded payments without creating entries. Exclude recoverably deleted and suppressed rent periods and warn that the forecast may be incomplete without revealing inaccessible records. Define other aggregation windows and behavior when the user has access to only some areas with the dashboard feature.
 
 ### Properties and tenants
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `GET /accounts/{accountId}/properties` | List properties | Properties |
-| `POST /accounts/{accountId}/properties` | Create a property | Properties |
-| `GET /accounts/{accountId}/properties/{propertyId}` | Get property details and permitted related summaries | Properties |
-| `PATCH /accounts/{accountId}/properties/{propertyId}` | Update a property | Properties |
-| `DELETE /accounts/{accountId}/properties/{propertyId}` | Soft-delete a property | Properties |
-| `GET /accounts/{accountId}/properties/{propertyId}/tenants` | List tenants associated with the property | Tenants |
-| `POST /accounts/{accountId}/properties/{propertyId}/tenants` | Create tenant information associated with the property | Tenants |
-| `GET /accounts/{accountId}/tenants/{tenantId}` | Get tenant details | Tenants |
-| `PATCH /accounts/{accountId}/tenants/{tenantId}` | Update tenant details | Tenants |
-| `DELETE /accounts/{accountId}/tenants/{tenantId}` | Soft-delete tenant information | Tenants |
+| Method and path                                              | Purpose                                                | Access     |
+| ------------------------------------------------------------ | ------------------------------------------------------ | ---------- |
+| `GET /accounts/{accountId}/properties`                       | List properties                                        | Properties |
+| `POST /accounts/{accountId}/properties`                      | Create a property                                      | Properties |
+| `GET /accounts/{accountId}/properties/{propertyId}`          | Get property details and permitted related summaries   | Properties |
+| `PATCH /accounts/{accountId}/properties/{propertyId}`        | Update a property                                      | Properties |
+| `DELETE /accounts/{accountId}/properties/{propertyId}`       | Soft-delete a property                                 | Properties |
+| `GET /accounts/{accountId}/properties/{propertyId}/tenants`  | List tenants associated with the property              | Tenants    |
+| `POST /accounts/{accountId}/properties/{propertyId}/tenants` | Create tenant information associated with the property | Tenants    |
+| `GET /accounts/{accountId}/tenants/{tenantId}`               | Get tenant details                                     | Tenants    |
+| `PATCH /accounts/{accountId}/tenants/{tenantId}`             | Update tenant details                                  | Tenants    |
+| `DELETE /accounts/{accountId}/tenants/{tenantId}`            | Soft-delete tenant information                         | Tenants    |
 
 Property and tenant payloads must follow the required and optional fields in [Product Requirements](PRODUCT.md#rental-spaces-and-contracts). Support landlord-named rooms belonging to a property and using its address; room routes and schemas remain to be designed. Tenant records represent contract signers, not other household occupants, and can be reused across properties within the same account. Define the existing-tenant association route and its authorization, exact schemas, and detailed validation with those features.
 
@@ -146,77 +146,77 @@ Implement the property, room, and signer archive/delete restrictions in [Product
 
 ### Contracts
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `GET /accounts/{accountId}/contracts` | List contracts; support property and status filters | Contracts |
-| `POST /accounts/{accountId}/contracts` | Create a contract and associate it with a property and one or more tenants | Contracts |
-| `GET /accounts/{accountId}/contracts/{contractId}` | Get contract details | Contracts |
-| `PATCH /accounts/{accountId}/contracts/{contractId}` | Update contract details | Contracts |
-| `DELETE /accounts/{accountId}/contracts/{contractId}` | Soft-delete a contract | Contracts |
-| `PUT /accounts/{accountId}/contracts/{contractId}/tenants/{tenantId}` | Associate a tenant with the contract | Contracts and Tenants |
-| `DELETE /accounts/{accountId}/contracts/{contractId}/tenants/{tenantId}` | Remove a tenant association | Contracts and Tenants |
+| Method and path                                                          | Purpose                                                                    | Access                |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------- | --------------------- |
+| `GET /accounts/{accountId}/contracts`                                    | List contracts; support property and status filters                        | Contracts             |
+| `POST /accounts/{accountId}/contracts`                                   | Create a contract and associate it with a property and one or more tenants | Contracts             |
+| `GET /accounts/{accountId}/contracts/{contractId}`                       | Get contract details                                                       | Contracts             |
+| `PATCH /accounts/{accountId}/contracts/{contractId}`                     | Update contract details                                                    | Contracts             |
+| `DELETE /accounts/{accountId}/contracts/{contractId}`                    | Soft-delete a contract                                                     | Contracts             |
+| `PUT /accounts/{accountId}/contracts/{contractId}/tenants/{tenantId}`    | Associate a tenant with the contract                                       | Contracts and Tenants |
+| `DELETE /accounts/{accountId}/contracts/{contractId}/tenants/{tenantId}` | Remove a tenant association                                                | Contracts and Tenants |
 
 Preserve historical contracts and apply the inclusive signed-contract and pending-renewal conflict rules in [Product Requirements](PRODUCT.md#rental-spaces-and-contracts). Signing is a manual status change, not electronic signing. Validate that the property, selected room, and every signer belong to the same account. Define room, early-ending, renewal, notice, and household-information contracts, concurrency handling, state transitions, and immutable historical fields before implementation.
 
 ### Payments
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `GET /accounts/{accountId}/contracts/{contractId}/payments` | List expected and received rent records for a contract | Payments |
-| `POST /accounts/{accountId}/contracts/{contractId}/payments` | Record an expected or received payment manually | Payments |
-| `GET /accounts/{accountId}/payments/{paymentId}` | Get a payment record | Payments |
-| `PATCH /accounts/{accountId}/payments/{paymentId}` | Update a payment record | Payments |
-| `DELETE /accounts/{accountId}/payments/{paymentId}` | Soft-delete a payment record | Payments |
+| Method and path                                              | Purpose                                                | Access   |
+| ------------------------------------------------------------ | ------------------------------------------------------ | -------- |
+| `GET /accounts/{accountId}/contracts/{contractId}/payments`  | List expected and received rent records for a contract | Payments |
+| `POST /accounts/{accountId}/contracts/{contractId}/payments` | Record an expected or received payment manually        | Payments |
+| `GET /accounts/{accountId}/payments/{paymentId}`             | Get a payment record                                   | Payments |
+| `PATCH /accounts/{accountId}/payments/{paymentId}`           | Update a payment record                                | Payments |
+| `DELETE /accounts/{accountId}/payments/{paymentId}`          | Soft-delete a payment record                           | Payments |
 
 Expected rent and cash receipts must be linked to a contract. Support multiple receipts per expected payment, allocation of one receipt across payments, contract-scoped unallocated credit, separately recorded non-cash reductions, optional schedule generation, rent changes, and separate deposit tracking as specified in [Product Requirements](PRODUCT.md#manual-rent-tracking). Preserve the original rent and distinguish money received from reductions and deposits. Apply the specified overdue date and remaining-balance rules; unallocated credit does not reduce the balance until applied. Receipt corrections must retain visible history and require reviewed allocation adjustments if allocations exceed the corrected amount; block receipt deletion while allocations remain and restore eligible receipts as unallocated credit without reinstating allocations. Block deletion of expected-rent entries while allocations or reductions remain; restore eligible entries without automatically reinstating either. Generation skips existing or recoverably deleted entries and suppressed periods, reports conflicts, and must not create duplicates under retries or concurrency. Block manual creation for those deleted or suppressed periods until the original is restored or the period re-enabled. An authorized editor can confirm re-enabling a suppressed period after seeing its effects. Define schedule, receipt, allocation, credit, reduction, deposit and correction schemas/routes, suppression-marker privacy/erasure handling, recovery conflicts with replacement entries, generation matching and conflict handling, and which statuses are stored versus derived. The API must not initiate or claim to process payments; payment-provider integrations are out of first-release scope.
 
 ### Expenses and maintenance
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `GET /accounts/{accountId}/properties/{propertyId}/expenses` | List property expenses; support date and category filters | Expenses |
-| `POST /accounts/{accountId}/properties/{propertyId}/expenses` | Record an expense | Expenses |
-| `GET /accounts/{accountId}/expenses/{expenseId}` | Get an expense | Expenses |
-| `PATCH /accounts/{accountId}/expenses/{expenseId}` | Update an expense | Expenses |
-| `DELETE /accounts/{accountId}/expenses/{expenseId}` | Soft-delete an expense | Expenses |
-| `GET /accounts/{accountId}/properties/{propertyId}/maintenance` | List maintenance records | Maintenance |
-| `POST /accounts/{accountId}/properties/{propertyId}/maintenance` | Record a maintenance request or activity | Maintenance |
-| `GET /accounts/{accountId}/maintenance/{maintenanceId}` | Get a maintenance record | Maintenance |
-| `PATCH /accounts/{accountId}/maintenance/{maintenanceId}` | Update status, dates, costs, or details | Maintenance |
-| `DELETE /accounts/{accountId}/maintenance/{maintenanceId}` | Soft-delete a maintenance record | Maintenance |
+| Method and path                                                  | Purpose                                                   | Access      |
+| ---------------------------------------------------------------- | --------------------------------------------------------- | ----------- |
+| `GET /accounts/{accountId}/properties/{propertyId}/expenses`     | List property expenses; support date and category filters | Expenses    |
+| `POST /accounts/{accountId}/properties/{propertyId}/expenses`    | Record an expense                                         | Expenses    |
+| `GET /accounts/{accountId}/expenses/{expenseId}`                 | Get an expense                                            | Expenses    |
+| `PATCH /accounts/{accountId}/expenses/{expenseId}`               | Update an expense                                         | Expenses    |
+| `DELETE /accounts/{accountId}/expenses/{expenseId}`              | Soft-delete an expense                                    | Expenses    |
+| `GET /accounts/{accountId}/properties/{propertyId}/maintenance`  | List maintenance records                                  | Maintenance |
+| `POST /accounts/{accountId}/properties/{propertyId}/maintenance` | Record a maintenance request or activity                  | Maintenance |
+| `GET /accounts/{accountId}/maintenance/{maintenanceId}`          | Get a maintenance record                                  | Maintenance |
+| `PATCH /accounts/{accountId}/maintenance/{maintenanceId}`        | Update status, dates, costs, or details                   | Maintenance |
+| `DELETE /accounts/{accountId}/maintenance/{maintenanceId}`       | Soft-delete a maintenance record                          | Maintenance |
 
 Expenses require a landlord-entered expense date and may reference a document; do not assume the expense date is the payment date. Maintenance records may reference related documents and actual expenses; estimates are separate from actual expenses, and linked actual costs must not be double-counted. Validate every referenced record against the same account and caller permissions. The initial categories and maintenance states are specified in [Product Requirements](PRODUCT.md#expenses-and-maintenance); define detailed schemas and allowed transitions before implementation.
 
 ### Documents
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `GET /accounts/{accountId}/documents` | List document metadata; support related-record filters | Documents and access to each associated record |
-| `POST /accounts/{accountId}/documents` | Upload a private document and associate it with an allowed business record | Documents and access to the associated record |
-| `GET /accounts/{accountId}/documents/{documentId}` | Get document metadata | Documents and access to the associated record |
-| `GET /accounts/{accountId}/documents/{documentId}/content` | Download or stream document content through the authenticated API | Documents and access to the associated record |
-| `PATCH /accounts/{accountId}/documents/{documentId}` | Update editable metadata or association | Documents and access to both associations |
-| `DELETE /accounts/{accountId}/documents/{documentId}` | Soft-delete document metadata and schedule private object cleanup | Documents and access to the associated record |
+| Method and path                                            | Purpose                                                                    | Access                                         |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------- |
+| `GET /accounts/{accountId}/documents`                      | List document metadata; support related-record filters                     | Documents and access to each associated record |
+| `POST /accounts/{accountId}/documents`                     | Upload a private document and associate it with an allowed business record | Documents and access to the associated record  |
+| `GET /accounts/{accountId}/documents/{documentId}`         | Get document metadata                                                      | Documents and access to the associated record  |
+| `GET /accounts/{accountId}/documents/{documentId}/content` | Download or stream document content through the authenticated API          | Documents and access to the associated record  |
+| `PATCH /accounts/{accountId}/documents/{documentId}`       | Update editable metadata or association                                    | Documents and access to both associations      |
+| `DELETE /accounts/{accountId}/documents/{documentId}`      | Soft-delete document metadata and schedule private object cleanup          | Documents and access to the associated record  |
 
 Document lists must exclude entries whose associated records the caller cannot view. Reading document metadata or content requires at least Viewer access to Documents and the associated record's area. Deletion requires Editor access to Documents and at least Viewer access to the associated record's area. Apply the same associated-record visibility requirement to uploads and to both the old and new associations when updating a document. Block deleting an associated record while active documents remain attached; moving or deleting documents requires the relevant permissions. If both record and document are deleted, restore the record before the document, respecting their independent 30-day recovery periods and current permissions. Keep file bytes in private object storage and metadata/storage keys in the database. Do not return storage keys or unrestricted public URLs. Initially accept PDF, JPEG, and PNG up to 20 MB per file, requiring a suitable malware scan before a file is available. Block uploads when scanning is unavailable. Specify safe content verification, quarantine, scanning failures and retries, content disposition, and the remaining deletion/restore lifecycle before implementation. An association must point to a supported record in the same account.
 
 ### Notifications and calendar
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `GET /accounts/{accountId}/notifications` | List notifications for the current member | Notifications |
-| `PATCH /accounts/{accountId}/notifications/{notificationId}` | Update the current member's notification state, such as read/unread | Notifications |
-| `GET /accounts/{accountId}/calendar?from={date}&to={date}` | List permitted upcoming events and important dates in a date range | Relevant source areas |
+| Method and path                                              | Purpose                                                             | Access                |
+| ------------------------------------------------------------ | ------------------------------------------------------------------- | --------------------- |
+| `GET /accounts/{accountId}/notifications`                    | List notifications for the current member                           | Notifications         |
+| `PATCH /accounts/{accountId}/notifications/{notificationId}` | Update the current member's notification state, such as read/unread | Notifications         |
+| `GET /accounts/{accountId}/calendar?from={date}&to={date}`   | List permitted upcoming events and important dates in a date range  | Relevant source areas |
 
 Notifications are scoped to the current user even when their source record is account-scoped. Recheck current permissions when notifications are read so revoked access cannot leak record details. Calendar results must include only event types and records the user is authorized to view. Renewal and overdue-rent alerts use in-app notifications and the calendar initially; other event generation and notification details require feature-level definitions. Delivery remains provider-independent.
 
 ### Reports
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `GET /accounts/{accountId}/reports/portfolio` | Property and rental summary for a requested period | Properties and Contracts |
-| `GET /accounts/{accountId}/reports/payments` | Payment history and overdue payment summary | Payments |
-| `GET /accounts/{accountId}/reports/expenses` | Expense summary for a requested period, optionally filtered by property or category | Expenses |
+| Method and path                               | Purpose                                                                             | Access                   |
+| --------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------ |
+| `GET /accounts/{accountId}/reports/portfolio` | Property and rental summary for a requested period                                  | Properties and Contracts |
+| `GET /accounts/{accountId}/reports/payments`  | Payment history and overdue payment summary                                         | Payments                 |
+| `GET /accounts/{accountId}/reports/expenses`  | Expense summary for a requested period, optionally filtered by property or category | Expenses                 |
 
 Report filters must validate date ranges, account-scoped identifiers, and supported groupings. Results must respect the same per-area authorization as source records. Export formats and additional report types are not specified in this release contract.
 
@@ -224,13 +224,13 @@ The UI defaults reports to the current calendar year and allows a different peri
 
 ### Settings and activity
 
-| Method and path | Purpose | Access |
-|---|---|---|
-| `GET /accounts/{accountId}/settings` | Read account-level settings | Owner |
-| `PATCH /accounts/{accountId}/settings` | Update account-level settings | Owner |
-| `GET /me/preferences` | Read the current user's theme, locale, formatting, and notification preferences | Authenticated |
-| `PATCH /me/preferences` | Update the current user's theme, locale, formatting, and notification preferences | Authenticated |
-| `GET /accounts/{accountId}/activity` | List relevant account activity with filters and pagination | Activity |
+| Method and path                        | Purpose                                                                           | Access        |
+| -------------------------------------- | --------------------------------------------------------------------------------- | ------------- |
+| `GET /accounts/{accountId}/settings`   | Read account-level settings                                                       | Owner         |
+| `PATCH /accounts/{accountId}/settings` | Update account-level settings                                                     | Owner         |
+| `GET /me/preferences`                  | Read the current user's theme, locale, formatting, and notification preferences   | Authenticated |
+| `PATCH /me/preferences`                | Update the current user's theme, locale, formatting, and notification preferences | Authenticated |
+| `GET /accounts/{accountId}/activity`   | List relevant account activity with filters and pagination                        | Activity      |
 
 Activity entries are read-only through this API. Record enough context to explain relevant actions without retaining unnecessary personal data, secrets, or full document contents. Define which actions are recorded and the retention policy before implementation.
 

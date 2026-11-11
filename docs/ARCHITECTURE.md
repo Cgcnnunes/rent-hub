@@ -26,17 +26,17 @@ Maintain a current record of each material Node.js/Workers incompatibility, the 
 
 ## Technology decisions
 
-| Concern | Decision |
-|---|---|
-| Web client | Next.js and strict TypeScript; responsive web, not native apps |
-| API transport | TypeScript using standard Web `Request`/`Response` APIs; no HTTP framework |
-| Backend runtime | Node.js locally and Cloudflare Workers initially, with runtime-specific entry points |
-| Monorepo | npm workspaces with Nx for project graph, affected tasks, and task caching |
-| Initial hosting | Cloudflare, subject to runtime and plan compatibility checks |
-| Relational database | Cloudflare D1 initially; SQLite-compatible local development |
-| File storage | Cloudflare R2 initially; private by default |
+| Concern               | Decision                                                                                 |
+| --------------------- | ---------------------------------------------------------------------------------------- |
+| Web client            | Next.js and strict TypeScript; responsive web, not native apps                           |
+| API transport         | TypeScript using standard Web `Request`/`Response` APIs; no HTTP framework               |
+| Backend runtime       | Node.js locally and Cloudflare Workers initially, with runtime-specific entry points     |
+| Monorepo              | npm workspaces with Nx for project graph, affected tasks, and task caching               |
+| Initial hosting       | Cloudflare, subject to runtime and plan compatibility checks                             |
+| Relational database   | Cloudflare D1 initially; SQLite-compatible local development                             |
+| File storage          | Cloudflare R2 initially; private by default                                              |
 | UI deployment adapter | Undecided until a compatibility prototype validates required Next.js features on Workers |
-| API deployment shape | Website and API are independent apps; only affected apps should be published |
+| API deployment shape  | Website and API are independent apps; only affected apps should be published             |
 
 Do not use Hono. Do not add a different server framework merely to hide Node.js/Workers incompatibilities. The frontend deployment adapter is also not selected yet; Cloudflare's [Next.js guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/) currently recommends a beta path, so test required features before committing to an adapter.
 

@@ -3,6 +3,7 @@
   "sourceRoot": "packages/localization/src",
   "targets": {
     "build": { "command": "tsc -p packages/localization/tsconfig.json" },
+    "lint": { "command": "eslint packages/localization --max-warnings=0" },
     "typecheck": { "command": "tsc -p packages/localization/tsconfig.json" }
   }
 }

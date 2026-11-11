@@ -1,6 +1,6 @@
 # Testing Strategy
 
-Testing is part of the architecture and must accompany each feature. The initial workspace runs `npm test` for API handler tests and `npm run test:graph` for Nx affected-project selection; `npm run typecheck` and `npm run build` run their available Nx targets. See the [development workflow](DEVELOPMENT.md) for setup and commands. These do not yet provide the complete coverage described below, actual Worker runtime verification, or authoritative application-quality CI.
+Testing is part of the architecture and must accompany each feature. The workspace runs `npm test` for API handler tests, `npm run test:graph` for Nx affected-project and target selection, and `npm run test:e2e` for a Chromium smoke test. PR validation runs full targets for affected apps and shared projects, with changed-file formatting checks and independent repository safeguards. See the [development workflow](DEVELOPMENT.md) for setup, caching, and commands. These checks do not yet provide the complete coverage described below or actual Worker runtime verification.
 
 ## Test levels
 
@@ -86,4 +86,4 @@ The planned local setup must run the web app, API, database, migrations, mock da
 
 Nx should run tasks for changed projects and their dependents, while caching deterministic task outputs. Declare task inputs and outputs correctly. A change to a shared package must trigger all dependent app checks/builds; unrelated app changes should not.
 
-PR validation is authoritative and must include type checking, linting, formatting validation, unit tests, relevant integration tests, and build validation. Do not bypass a failing quality gate to make a workflow pass.
+PR validation currently includes type checking, linting, formatting validation, available unit and browser tests, and build validation. Integration and Worker runtime tests remain planned and must be added when those capabilities are implemented. Do not bypass a failing quality gate to make a workflow pass. See the [PR validation guide](workflows/execute-pr-validation/README.md) for its exact flow.

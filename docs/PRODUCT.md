@@ -37,20 +37,20 @@ The initial business model remains account-based even when an account has only o
 
 ## First-release modules
 
-| Module | Initial scope |
-|---|---|
-| Dashboard | Property and active-contract summaries, upcoming and overdue payments, recent activity, maintenance, and important dates. |
-| Properties | Create and edit properties and optional named rooms; view address, associated tenants and contracts, and related records. |
-| Tenants | Manage contract signers through the associated property; provide an Add Tenant action on the property page to users who may view the property and add tenants. |
-| Contracts | Manage whole-property or room contracts, signers, lifecycle, renewals, dates, and history; enforce the rental-space overlap rules below. |
-| Payments | Track expected rent, receipts, allocations, outstanding balances, overdue amounts, and agreed reductions manually; payment-provider integrations are deferred. |
-| Expenses | Record and categorize property expenses, with optional related documents. |
-| Maintenance | Record requests and activities, status, dates, costs, and related documents. |
-| Documents | Upload and manage private files associated with business records. |
-| Notifications and calendar | Track relevant events and upcoming contract/payment dates. Keep delivery provider-independent. |
-| Reports | Property and rental summaries, payment history, overdue payments, expenses, and future landlord reports. |
-| Settings | Account and user preferences, locale/formatting, and notification preferences. |
-| Activity log | Record relevant actions with enough context to explain changes without retaining unnecessary sensitive data. |
+| Module                     | Initial scope                                                                                                                                                  |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dashboard                  | Property and active-contract summaries, upcoming and overdue payments, recent activity, maintenance, and important dates.                                      |
+| Properties                 | Create and edit properties and optional named rooms; view address, associated tenants and contracts, and related records.                                      |
+| Tenants                    | Manage contract signers through the associated property; provide an Add Tenant action on the property page to users who may view the property and add tenants. |
+| Contracts                  | Manage whole-property or room contracts, signers, lifecycle, renewals, dates, and history; enforce the rental-space overlap rules below.                       |
+| Payments                   | Track expected rent, receipts, allocations, outstanding balances, overdue amounts, and agreed reductions manually; payment-provider integrations are deferred. |
+| Expenses                   | Record and categorize property expenses, with optional related documents.                                                                                      |
+| Maintenance                | Record requests and activities, status, dates, costs, and related documents.                                                                                   |
+| Documents                  | Upload and manage private files associated with business records.                                                                                              |
+| Notifications and calendar | Track relevant events and upcoming contract/payment dates. Keep delivery provider-independent.                                                                 |
+| Reports                    | Property and rental summaries, payment history, overdue payments, expenses, and future landlord reports.                                                       |
+| Settings                   | Account and user preferences, locale/formatting, and notification preferences.                                                                                 |
+| Activity log               | Record relevant actions with enough context to explain changes without retaining unnecessary sensitive data.                                                   |
 
 ## Core data concepts
 

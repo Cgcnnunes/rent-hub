@@ -4,14 +4,16 @@
 
 No application deployment workflows or Cloudflare resources have been created yet. This document defines the intended behavior; it is not evidence that deployments are available.
 
-The GitHub `main` ruleset requires a pull request, one approval, and the `PR validation` status check; it blocks direct pushes, deletions, and force pushes, and allows repository admins to bypass. The `execute-pr-validation.yml` workflow checks release selection, PR commit subjects and title, and patch whitespace. The initial workspace exists, but its Nx tasks are not yet integrated into PR validation.
+The GitHub `main` ruleset requires a pull request, one approval, and the `PR validation` status check; it blocks direct pushes, deletions, and force pushes, and allows repository admins to bypass. The `execute-pr-validation.yml` workflow checks release selection, PR commit subjects and title, patch whitespace, formatting and root tooling; it runs lint, type checks, tests and builds for affected apps and shared projects against the PR base and head. The required check aggregates all applicable jobs.
+
+See the [PR validation workflow guide](workflows/execute-pr-validation/README.md) for triggers, jobs, and troubleshooting.
 
 ## Environments
 
-| Environment | Purpose | Isolation |
-|---|---|---|
-| TEST | Integration, acceptance, authentication, API, smoke, and deployment validation | Dedicated provider account, users, database, storage, and secrets |
-| PROD | Live application and controlled production verification | Separate provider account, users, database, storage, and secrets |
+| Environment | Purpose                                                                        | Isolation                                                         |
+| ----------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| TEST        | Integration, acceptance, authentication, API, smoke, and deployment validation | Dedicated provider account, users, database, storage, and secrets |
+| PROD        | Live application and controlled production verification                        | Separate provider account, users, database, storage, and secrets  |
 
 Do not share databases, buckets, authentication secrets, API credentials, email credentials, production configuration, or customer data across TEST and PROD. Synthetic users must use normal authentication and be clearly controlled.
 
