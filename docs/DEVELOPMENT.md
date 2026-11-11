@@ -30,12 +30,23 @@ The first implementation phase should add:
 
 The commit sequence is separate from the feature-branch sequence. A collision-safe assignment mechanism is unresolved; do not assume the branch number is the commit number or enforce a race-prone local counter.
 
+Allowed commit types are `feat`, `chore`, `refactor`, `fix`, and `doc`. The lowercase description must not exceed 120 characters.
+
+## Planned Git hooks
+
+- **Pre-commit:** run formatting, linting, and relevant unit tests; use affected checks where practical.
+- **Commit-msg:** validate the commit format, allowed type, lowercase description, and description length. Do not enforce a race-prone identifier allocator.
+- **Pre-push:** reject direct pushes to `main` and feature branches that do not match `rent-xxxxx`; run relevant affected checks without PROD resources.
+
+PR validation remains the authoritative quality gate. The precise commands will be documented when the workspace and hooks are implemented.
+
 ## Code conventions
 
 - Use strict TypeScript, explicit public contract types, and explicit function return types.
 - Do not use `any`; avoid unsafe assertions.
 - Validate external input at system boundaries.
 - Use single quotes and Prettier formatting.
+- Order imports, exports, and object keys alphabetically where safe and meaningful; preserve order where it affects behavior or clarity.
 - Keep functions focused, names meaningful, and abstractions justified.
 - Keep user-facing text in localization resources rather than business logic.
 - Do not access databases or provider bindings from the frontend.

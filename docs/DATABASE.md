@@ -47,6 +47,8 @@ erDiagram
 
 Every business record must be scoped to an account, directly or through a parent relationship. A user can belong to multiple accounts. Each membership has its own access level for each application area.
 
+User preferences include the user's selected visual theme; the database is the authoritative source across sessions, devices, and account switches. Ledger is the default when an account is first created.
+
 ## Integrity requirements
 
 - Use relational relationships, foreign keys, indexes, and constraints.

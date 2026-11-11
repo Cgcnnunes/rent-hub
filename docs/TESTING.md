@@ -34,7 +34,7 @@ Run smoke tests after each deployment. Check application availability and critic
 
 ## Local test environment
 
-The planned local setup must run the web app, API, database, migrations, mock data, test users, authentication, and test file uploads without using PROD resources.
+The planned local setup must run the web app, API, database, migrations, mock data, test users, authentication, and test file uploads without using PROD resources. Developers must be able to inspect and query the local database and manually exercise the app and API. Never use PROD data for local development or testing.
 
 ## CI selection and caching
 

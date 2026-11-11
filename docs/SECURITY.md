@@ -4,7 +4,7 @@
 
 Use custom authentication that does not require a hosting provider or external identity provider. The planned flow includes self-service registration, email verification before app use, login, password recovery, secure password hashing, signed JWT or equivalent tokens, and session/token lifecycle management.
 
-The implementation must define token claims, expiry, refresh, revocation, browser transport, and CSRF protections before authentication is released. Protect authenticated API endpoints and enforce authorization on the backend.
+The implementation must define token claims, expiry, refresh, revocation, browser transport, and CSRF protections before authentication is released. Consider a user identifier, token identifier where appropriate, issued-at time, and expiry when defining the claim contract; exact choices remain open. Protect authenticated API endpoints and enforce authorization on the backend.
 
 ## Account authorization
 

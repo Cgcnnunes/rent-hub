@@ -38,6 +38,8 @@ The Nx project graph, task inputs/outputs, changed-file base/head, and deploymen
 
 Create exactly three principal GitHub Actions workflows:
 
+Give workflows, jobs, and steps descriptive names. Separate jobs and logical step groups with blank lines.
+
 ### `execute-pr-validation.yml`
 
 - Run for pull requests targeting `main`.
@@ -57,14 +59,15 @@ Create exactly three principal GitHub Actions workflows:
 
 - Run only through `workflow_dispatch`, with a Git tag selected as the workflow reference.
 - Reject `main` and all branch references; validate that the tag exists and is eligible for PROD.
-- Deploy the selected validated tag, run production verification/smoke tests, then promote the corresponding GitHub pre-release to a release.
+- For a normal release, deploy the selected validated tag, run production verification/smoke tests, then promote the corresponding GitHub pre-release to a release.
+- Support an explicitly selected rollback to an older tag that was previously deployed successfully to PROD, subject to the rollback safeguards below.
 - Keep TEST and PROD credentials separate and protect GitHub environments as appropriate.
 
 ## Production history and rollback
 
-- A successfully deployed tag must not be deployed to PROD again.
+- A successfully deployed tag must not be deployed again as a normal release. It may be redeployed as an explicitly selected rollback to a previously successful older PROD release.
 - A failed deployment must remain retryable.
-- Older eligible tags must remain deployable for rollback; do not impose a latest-tag-only rule.
-- A successful older-tag deployment is an intentional rollback.
+- Before rollback, verify that the older application release is compatible with the current database schema. Stop if compatibility is unknown or unsafe; database restoration or reverse migrations are separate, deliberate operations.
+- Run production verification after rollback and record it durably as a rollback. Do not create or promote a duplicate release for it.
 - Use durable deployment history (for example, GitHub deployment/environment records or equivalent metadata). A workflow run's existence alone is not proof of successful deployment.
 - Never promote a release before a successful PROD deployment.
